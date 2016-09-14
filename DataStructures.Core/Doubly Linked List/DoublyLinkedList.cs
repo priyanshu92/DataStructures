@@ -2,45 +2,45 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace DataStructures.Core
+namespace DataStructures.Core.DoublyLinkedList
 {
     /// <summary>
-    /// A linked list collection which is capable of basic operations such as
+    /// A doubly linked list collection which is capable of basic operations such as
     /// Add, Remove, Find and Enumerate
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class LinkedList<T> : ICollection<T>
+    public class DoublyLinkedList<T> : ICollection<T>
     {
         /// <summary>
-        /// A pointer to the Head of the linked list.
+        /// A pointer to the Head of the doubly linked list.
         /// </summary>                                  
-        public LinkedListNode<T> Head { get; private set; }
+        public DoublyLinkedListNode<T> Head { get; private set; }
 
         /// <summary>
-        /// A pointer to the tail of the linked list.
+        /// A pointer to the tail of the doubly linked list.
         /// </summary>
-        public LinkedListNode<T> Tail { get; private set; }
+        public DoublyLinkedListNode<T> Tail { get; private set; }
 
         #region Add
         /// <summary>
-        /// Adds the value to the start of the linked list.
+        /// Adds the value to the start of the doubly linked list.
         /// </summary>
         /// <param name="value">The value to be added.</param>
         public void AddFirst(T value)
         {
-            AddFirst(new LinkedListNode<T>(value));
+            AddFirst(new DoublyLinkedListNode<T>(value));
         }
 
         /// <summary>
-        /// Adds the node to the start of the linked list.
+        /// Adds the node to the start of the doubly linked list.
         /// </summary>
         /// <param name="node">The node to be added.</param>
-        public void AddFirst(LinkedListNode<T> node)
+        public void AddFirst(DoublyLinkedListNode<T> node)
         {
-            LinkedListNode<T> nodeToBeAdded = new LinkedListNode<T>(node.Value);
+            DoublyLinkedListNode<T> nodeToBeAdded = new DoublyLinkedListNode<T>(node.Value);
 
             // Save the head so we don't lose it.
-            LinkedListNode<T> temp = Head;
+            DoublyLinkedListNode<T> temp = Head;
 
             // Point head to the new node.
             Head = nodeToBeAdded;
@@ -54,32 +54,32 @@ namespace DataStructures.Core
             {
                 // If there is only one node then Head and Tail should both point to it.
                 Tail = nodeToBeAdded;
-            }            
+            }
+            else
+            {
+                temp.Previous = Head;
+            }
 
             System.Console.WriteLine($"Node added with value {nodeToBeAdded.Value}");
         }
 
         /// <summary>
-        /// Adds the value to the end of the linked list
+        /// Adds the value to the end of the doubly linked list
         /// </summary>
         /// <param name="value">The value to be added.</param>
         public void AddLast(T value)
         {
-            AddLast(new LinkedListNode<T>(value));
+            AddLast(new DoublyLinkedListNode<T>(value));
         }
 
         /// <summary>
-        /// Adds the node to the end of the linked list.
+        /// Adds the node to the end of the doubly linked list.
         /// </summary>
         /// <param name="node">The node to be added.</param>
-        public void AddLast(LinkedListNode<T> node)
+        public void AddLast(DoublyLinkedListNode<T> node)
         {
-            LinkedListNode<T> nodeToBeAdded = new LinkedListNode<T>(node.Value);
-
-            if (nodeToBeAdded.Next != null)
-            {
-
-            }
+            DoublyLinkedListNode<T> nodeToBeAdded = new DoublyLinkedListNode<T>(node.Value);
+            
             if (Count == 0)
             {
                 Head = nodeToBeAdded;
@@ -87,6 +87,7 @@ namespace DataStructures.Core
             else
             {
                 Tail.Next = nodeToBeAdded;
+                nodeToBeAdded.Previous = Tail;
             }
             Tail = nodeToBeAdded;
             Count++;
@@ -103,14 +104,16 @@ namespace DataStructures.Core
         {
             if (Count > 0)
             {
-                LinkedListNode<T> temp = Head;
+                DoublyLinkedListNode<T> temp = Head;
 
-                Head = Head.Next;
+                Head = Head.Next;                
 
                 Count--;
 
                 if (Count == 0)
                     Tail = null;
+                else
+                    Head.Previous = null;
 
                 System.Console.WriteLine($"Node deleted from first and had value {temp.Value}");
             }
@@ -128,7 +131,7 @@ namespace DataStructures.Core
             if (Count > 0)
             {
                 //Store the Head in a temp variable            
-                LinkedListNode<T> temp = Head;
+                DoublyLinkedListNode<T> temp = Head;
 
                 if (Count == 1)
                 {
@@ -137,16 +140,8 @@ namespace DataStructures.Core
                 }
                 else
                 {
-
-                    //Iterate till the second last value
-                    while (temp.Next != Tail)
-                    {
-                        temp = temp.Next;
-                    }
-
-                    //Point the second last node to null
-                    temp.Next = null;
-                    Tail = temp;
+                    Tail.Previous.Next = null;
+                    Tail = Tail.Previous;      
                 }
 
                 Count--;
@@ -168,11 +163,8 @@ namespace DataStructures.Core
         /// </summary>
         public int Count
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            private set { Count = value; }
+            get;
+            private set;
         }
 
         /// <summary>
@@ -213,7 +205,7 @@ namespace DataStructures.Core
         /// <returns>True if item is found, otherwise false.</returns>
         public bool Contains(T item)
         {
-            LinkedListNode<T> temp = Head;
+            DoublyLinkedListNode<T> temp = Head;
             while (temp != null)
             {
                 if (temp.Value.Equals(item))
@@ -235,7 +227,7 @@ namespace DataStructures.Core
         /// <param name="arrayIndex">The starting index from which to start copy.</param>
         public void CopyTo(T[] array, int arrayIndex)
         {
-            LinkedListNode<T> temp = Head;
+            DoublyLinkedListNode<T> temp = Head;
             while (temp != null)
             {
                 array[arrayIndex++] = temp.Value;
@@ -244,12 +236,12 @@ namespace DataStructures.Core
         }
 
         /// <summary>
-        /// Enumerates over the linked list from Head to Tail
+        /// Enumerates over the doubly linked list from Head to Tail
         /// </summary>
         /// <returns>A Head to Tail Enumerator</returns>
         public IEnumerator<T> GetEnumerator()
         {
-            LinkedListNode<T> current = Head;
+            DoublyLinkedListNode<T> current = Head;
             while (current != null)
             {
                 yield return current.Value;
@@ -258,14 +250,14 @@ namespace DataStructures.Core
         }
 
         /// <summary>
-        /// Removes the first occurrance of the value from the linked list.
+        /// Removes the first occurrance of the value from the doubly linked list.
         /// </summary>
         /// <param name="item">The value to be removed.</param>
         /// <returns>True if the value is removed, otherwise false.</returns>
         public bool Remove(T item)
         {
-            LinkedListNode<T> previous = null;
-            LinkedListNode<T> current = Head;
+            DoublyLinkedListNode<T> previous = null;
+            DoublyLinkedListNode<T> current = Head;
 
             while (current != null)
             {
@@ -286,6 +278,10 @@ namespace DataStructures.Core
                         {
                             Tail = previous;
                         }
+                        else
+                        {
+                            current.Next.Previous = previous;
+                        }
                         Count--;
                     }
                     return true;
@@ -301,7 +297,7 @@ namespace DataStructures.Core
         }
 
         /// <summary>
-        /// Enumerates over the linked list from Head to Tail
+        /// Enumerates over the doubly linked list from Head to Tail
         /// </summary>
         /// <returns>A Head to Tail Enumerator</returns>
         IEnumerator IEnumerable.GetEnumerator()
