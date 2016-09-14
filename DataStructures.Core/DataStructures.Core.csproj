@@ -46,6 +46,7 @@
     <Compile Include="Linked List\LinkedListNode.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queue\PriorityQueue.cs" />
     <Compile Include="Queue\QueueArray.cs" />
     <Compile Include="Queue\QueueLinkedList.cs" />
     <Compile Include="Stack\Stack.cs" />
