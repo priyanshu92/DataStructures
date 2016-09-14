@@ -1,10 +1,62 @@
-﻿using DataStructures.Core;
+﻿using System;
+using DataStructures.Core;
+using System.Collections.Generic;
 
 namespace DataStructures.Console
 {
     class Program
     {
         static void Main(string[] args)
+        {
+            //NodesListExample();
+
+            PostFixCalculator(args);
+        }
+
+        private static void PostFixCalculator(string[] args)
+        {
+            Stack<int> values = new Stack<int>();
+
+            foreach (var token in args)
+            {
+                int value;
+
+                if (int.TryParse(token, out value))
+                {
+                    values.Push(value);
+                }
+                else
+                {
+                    int rhs = values.Pop();
+                    int lhs = values.Pop();
+
+                    switch (token)
+                    {
+                        case "+":
+                            values.Push(lhs + rhs);
+                            break;
+                        case "-":
+                            values.Push(lhs - rhs);
+                            break;
+                        case "*":
+                            values.Push(lhs * rhs);
+                            break;
+                        case "/":
+                            values.Push(lhs / rhs);
+                            break;
+                        case "%":
+                            values.Push(lhs % rhs);
+                            break;
+                        default:
+                            throw new ArgumentException($"Unrecognized token {token}");
+                    }
+                }
+            }
+
+            System.Console.WriteLine(values.Pop());
+        }
+
+        static void NodesListExample()
         {
             // +-----+------+
             // |  3  | null +
@@ -38,7 +90,7 @@ namespace DataStructures.Console
 
         static void PrintList(Node node)
         {
-            while(node != null)
+            while (node != null)
             {
                 System.Console.WriteLine($"Value: {node.Value}");
                 node = node.Next;
