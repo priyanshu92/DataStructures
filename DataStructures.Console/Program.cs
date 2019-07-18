@@ -5,13 +5,13 @@ using static System.Console;
 
 namespace DataStructures.Console
 {
-    internal class Program
+    public class Program
     {
         private static void Main(string[] args)
         {
             //NodesListExample();
 
-            PostFixCalculator(args);
+            //PostFixCalculator(args);
         }
 
         private static void PostFixCalculator(string[] args)
