@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using static System.Console;
 
 namespace DataStructures.Core.LinkedList
 {
@@ -13,7 +13,7 @@ namespace DataStructures.Core.LinkedList
     {
         /// <summary>
         /// A pointer to the Head of the linked list.
-        /// </summary>                                  
+        /// </summary>
         public LinkedListNode<T> Head { get; private set; }
 
         /// <summary>
@@ -22,6 +22,7 @@ namespace DataStructures.Core.LinkedList
         public LinkedListNode<T> Tail { get; private set; }
 
         #region Add
+
         /// <summary>
         /// Adds the value to the start of the linked list.
         /// </summary>
@@ -54,9 +55,9 @@ namespace DataStructures.Core.LinkedList
             {
                 // If there is only one node then Head and Tail should both point to it.
                 Tail = nodeToBeAdded;
-            }            
+            }
 
-            System.Console.WriteLine($"Node added with value {nodeToBeAdded.Value}");
+            WriteLine($"Node added with value {nodeToBeAdded.Value}");
         }
 
         /// <summary>
@@ -75,7 +76,7 @@ namespace DataStructures.Core.LinkedList
         public void AddLast(LinkedListNode<T> node)
         {
             LinkedListNode<T> nodeToBeAdded = new LinkedListNode<T>(node.Value);
-            
+
             if (Count == 0)
             {
                 Head = nodeToBeAdded;
@@ -87,11 +88,13 @@ namespace DataStructures.Core.LinkedList
             Tail = nodeToBeAdded;
             Count++;
 
-            System.Console.WriteLine($"Node added with value {nodeToBeAdded.Value}");
+            WriteLine($"Node added with value {nodeToBeAdded.Value}");
         }
-        #endregion
+
+        #endregion Add
 
         #region Remove
+
         /// <summary>
         /// Removes the first node from the list.
         /// </summary>
@@ -108,11 +111,11 @@ namespace DataStructures.Core.LinkedList
                 if (Count == 0)
                     Tail = null;
 
-                System.Console.WriteLine($"Node deleted from first and had value {temp.Value}");
+                WriteLine($"Node deleted from first and had value {temp.Value}");
             }
             else
             {
-                System.Console.WriteLine($"List is already empty. No node to delete.");
+                WriteLine($"List is already empty. No node to delete.");
             }
         }
 
@@ -123,7 +126,7 @@ namespace DataStructures.Core.LinkedList
         {
             if (Count > 0)
             {
-                //Store the Head in a temp variable            
+                //Store the Head in a temp variable
                 LinkedListNode<T> temp = Head;
 
                 if (Count == 1)
@@ -133,7 +136,6 @@ namespace DataStructures.Core.LinkedList
                 }
                 else
                 {
-
                     //Iterate till the second last value
                     while (temp.Next != Tail)
                     {
@@ -147,15 +149,15 @@ namespace DataStructures.Core.LinkedList
 
                 Count--;
 
-                System.Console.WriteLine($"Node deleted from last with value {temp.Value}");
+                WriteLine($"Node deleted from last with value {temp.Value}");
             }
             else
             {
-                System.Console.WriteLine($"List is already empty. No node to delete.");
+                WriteLine($"List is already empty. No node to delete.");
             }
-
         }
-        #endregion
+
+        #endregion Remove
 
         #region ICollection
 
@@ -219,7 +221,6 @@ namespace DataStructures.Core.LinkedList
 
             return false;
         }
-
 
         /// <summary>
         /// Copies the node values in the specified array.
@@ -301,6 +302,7 @@ namespace DataStructures.Core.LinkedList
         {
             return ((IEnumerable<T>)this).GetEnumerator();
         }
-        #endregion
+
+        #endregion ICollection
     }
 }

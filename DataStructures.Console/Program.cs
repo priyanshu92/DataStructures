@@ -1,12 +1,13 @@
-﻿using System;
-using DataStructures.Core;
+﻿using DataStructures.Core;
+using System;
 using System.Collections.Generic;
+using static System.Console;
 
 namespace DataStructures.Console
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             //NodesListExample();
 
@@ -35,64 +36,68 @@ namespace DataStructures.Console
                         case "+":
                             values.Push(lhs + rhs);
                             break;
+
                         case "-":
                             values.Push(lhs - rhs);
                             break;
+
                         case "*":
                             values.Push(lhs * rhs);
                             break;
+
                         case "/":
                             values.Push(lhs / rhs);
                             break;
+
                         case "%":
                             values.Push(lhs % rhs);
                             break;
+
                         default:
                             throw new ArgumentException($"Unrecognized token {token}");
                     }
                 }
             }
 
-            System.Console.WriteLine(values.Pop());
+            WriteLine(values.Pop());
         }
 
-        static void NodesListExample()
+        private static void NodesListExample()
         {
             // +-----+------+
             // |  3  | null +
             // +-----+------+
             Node first = new Node { Value = 3 };
 
-            // +-----+------+       +-----+------+ 
+            // +-----+------+       +-----+------+
             // |  3  | null +       |  5  | null +
             // +-----+------+       +-----+------+
             Node middle = new Node { Value = 5 };
 
-            // +-----+------+       +-----+------+ 
+            // +-----+------+       +-----+------+
             // |  3  | null +------>|  5  | null +
             // +-----+------+       +-----+------+
             first.Next = middle;
 
-            // +-----+------+       +-----+------+      +-----+------+ 
+            // +-----+------+       +-----+------+      +-----+------+
             // |  3  | null +------>|  5  | null +      |  7  | null +
             // +-----+------+       +-----+------+      +-----+------+
             Node last = new Node { Value = 7 };
 
-            // +-----+------+       +-----+------+      +-----+------+ 
+            // +-----+------+       +-----+------+      +-----+------+
             // |  3  | null +------>|  5  | null +----->|  7  | null +
             // +-----+------+       +-----+------+      +-----+------+
             middle.Next = last;
-
 
             // Iterate over the each node and print the value
             PrintList(first);
         }
 
-        static void PrintList(Node node)
+        private static void PrintList(Node node)
         {
             while (node != null)
             {
-                System.Console.WriteLine($"Value: {node.Value}");
+                WriteLine($"Value: {node.Value}");
                 node = node.Next;
             }
         }

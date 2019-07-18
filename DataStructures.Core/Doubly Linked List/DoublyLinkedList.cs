@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using static System.Console;
 
 namespace DataStructures.Core.DoublyLinkedList
 {
@@ -13,7 +13,7 @@ namespace DataStructures.Core.DoublyLinkedList
     {
         /// <summary>
         /// A pointer to the Head of the doubly linked list.
-        /// </summary>                                  
+        /// </summary>
         public DoublyLinkedListNode<T> Head { get; private set; }
 
         /// <summary>
@@ -22,6 +22,7 @@ namespace DataStructures.Core.DoublyLinkedList
         public DoublyLinkedListNode<T> Tail { get; private set; }
 
         #region Add
+
         /// <summary>
         /// Adds the value to the start of the doubly linked list.
         /// </summary>
@@ -60,7 +61,7 @@ namespace DataStructures.Core.DoublyLinkedList
                 temp.Previous = Head;
             }
 
-            System.Console.WriteLine($"Node added with value {nodeToBeAdded.Value}");
+            WriteLine($"Node added with value {nodeToBeAdded.Value}");
         }
 
         /// <summary>
@@ -79,7 +80,7 @@ namespace DataStructures.Core.DoublyLinkedList
         public void AddLast(DoublyLinkedListNode<T> node)
         {
             DoublyLinkedListNode<T> nodeToBeAdded = new DoublyLinkedListNode<T>(node.Value);
-            
+
             if (Count == 0)
             {
                 Head = nodeToBeAdded;
@@ -92,11 +93,13 @@ namespace DataStructures.Core.DoublyLinkedList
             Tail = nodeToBeAdded;
             Count++;
 
-            System.Console.WriteLine($"Node added with value {nodeToBeAdded.Value}");
+            WriteLine($"Node added with value {nodeToBeAdded.Value}");
         }
-        #endregion
+
+        #endregion Add
 
         #region Remove
+
         /// <summary>
         /// Removes the first node from the list.
         /// </summary>
@@ -106,7 +109,7 @@ namespace DataStructures.Core.DoublyLinkedList
             {
                 DoublyLinkedListNode<T> temp = Head;
 
-                Head = Head.Next;                
+                Head = Head.Next;
 
                 Count--;
 
@@ -115,11 +118,11 @@ namespace DataStructures.Core.DoublyLinkedList
                 else
                     Head.Previous = null;
 
-                System.Console.WriteLine($"Node deleted from first and had value {temp.Value}");
+                WriteLine($"Node deleted from first and had value {temp.Value}");
             }
             else
             {
-                System.Console.WriteLine($"List is already empty. No node to delete.");
+                WriteLine($"List is already empty. No node to delete.");
             }
         }
 
@@ -130,7 +133,7 @@ namespace DataStructures.Core.DoublyLinkedList
         {
             if (Count > 0)
             {
-                //Store the Head in a temp variable            
+                //Store the Head in a temp variable
                 DoublyLinkedListNode<T> temp = Head;
 
                 if (Count == 1)
@@ -141,20 +144,20 @@ namespace DataStructures.Core.DoublyLinkedList
                 else
                 {
                     Tail.Previous.Next = null;
-                    Tail = Tail.Previous;      
+                    Tail = Tail.Previous;
                 }
 
                 Count--;
 
-                System.Console.WriteLine($"Node deleted from last with value {temp.Value}");
+                WriteLine($"Node deleted from last with value {temp.Value}");
             }
             else
             {
-                System.Console.WriteLine($"List is already empty. No node to delete.");
+                WriteLine($"List is already empty. No node to delete.");
             }
-
         }
-        #endregion
+
+        #endregion Remove
 
         #region ICollection
 
@@ -218,7 +221,6 @@ namespace DataStructures.Core.DoublyLinkedList
 
             return false;
         }
-
 
         /// <summary>
         /// Copies the node values in the specified array.
@@ -304,6 +306,7 @@ namespace DataStructures.Core.DoublyLinkedList
         {
             return ((IEnumerable<T>)this).GetEnumerator();
         }
-        #endregion
+
+        #endregion ICollection
     }
 }
