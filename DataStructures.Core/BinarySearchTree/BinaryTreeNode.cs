@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DataStructures.Core.BinaryTree
+namespace DataStructures.Core.BinarySearchTree
 {
     /// <summary>
     /// Represents a node of a binary tree. Contains a value, a pointer to left node

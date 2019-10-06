@@ -2,20 +2,25 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace DataStructures.Core.BinaryTree
+namespace DataStructures.Core.BinarySearchTree
 {
     /// <summary>
-    /// Represents a Binary Tree
+    /// Represents a Binary Search Tree
     /// </summary>
     /// <typeparam name="T">The type of data to be stored.</typeparam>
-    public class BinaryTree<T> : IEnumerable<T>
+    public class BinarySearchTree<T> : IEnumerable<T>
         where T : IComparable<T>
     {
-
         private BinaryTreeNode<T> _head;
         private int _count;
 
+        public BinaryTreeNode<T> Root
+        {
+            get { return _head; }
+        }
+
         #region Add
+
         /// <summary>
         /// Adds a new value to the binary tree.
         /// </summary>
@@ -35,6 +40,39 @@ namespace DataStructures.Core.BinaryTree
 
             //Update the current number of nodes
             _count++;
+        }
+
+        public void Add(BinaryTreeNode<T> node)
+        {
+            if (node is null)
+                return;
+
+            if (_head is null)
+                _head = node;
+            else
+                AddTo(_head, node);
+            _count++;
+        }
+
+        private void AddTo(BinaryTreeNode<T> node, BinaryTreeNode<T> nodeToAdd)
+        {
+            if (node is null || nodeToAdd is null)
+                return;
+
+            if (nodeToAdd.Value.CompareTo(node.Value) < 0)
+            {
+                if (node.Left is null)
+                    node.Left = nodeToAdd;
+                else
+                    AddTo(node.Left, nodeToAdd);
+            }
+            else
+            {
+                if (node.Right is null)
+                    node.Right = nodeToAdd;
+                else
+                    AddTo(node.Right, nodeToAdd);
+            }
         }
 
         /// <summary>
@@ -71,7 +109,8 @@ namespace DataStructures.Core.BinaryTree
                 }
             }
         }
-        #endregion
+
+        #endregion Add
 
         /// <summary>
         /// Checks if the specified value exists in the binary tree or not.
@@ -122,6 +161,7 @@ namespace DataStructures.Core.BinaryTree
         }
 
         #region Remove
+
         /// <summary>
         /// Removes the first node with the given value.
         /// </summary>
@@ -167,7 +207,7 @@ namespace DataStructures.Core.BinaryTree
                 //The new parent should point to the left sub tree of current.
                 current.Right.Left = current.Left;
 
-                if(parent == null)
+                if (parent == null)
                 {
                     _head = current.Right;
                 }
@@ -215,7 +255,7 @@ namespace DataStructures.Core.BinaryTree
                     {
                         parent.Left = leftMost;
                     }
-                    else if(result < 0)
+                    else if (result < 0)
                     {
                         parent.Right = leftMost;
                     }
@@ -224,9 +264,11 @@ namespace DataStructures.Core.BinaryTree
 
             return true;
         }
-        #endregion
+
+        #endregion Remove
 
         #region Traversal
+
         public enum TraversalType
         {
             PreOrder,
@@ -306,9 +348,9 @@ namespace DataStructures.Core.BinaryTree
                     }
                 }
             }
-
         }
-        #endregion       
+
+        #endregion Traversal
 
         /// <summary>
         /// Removes all the nodes from the tree
@@ -319,7 +361,6 @@ namespace DataStructures.Core.BinaryTree
             _head = null;
         }
 
-
         /// <summary>
         /// The number of items currently in the tree/
         /// </summary>
@@ -327,8 +368,6 @@ namespace DataStructures.Core.BinaryTree
         {
             get { return _count; }
         }
-
-
 
         public IEnumerator<T> GetEnumerator()
         {
