@@ -644,5 +644,61 @@ namespace DataStructures.Core.BinarySearchTree
                 action(s2.Pop().Value);
             }
         }
+
+        /// <summary>
+        /// Method to check if the tree is BST or not. (It will always retrun true for this tree
+        /// as it is BST but this method can check for any binary tree).
+        /// </summary>
+        /// <returns>True if the tree is BST otherwise False</returns>
+        public bool RecursiveIsValidBST()
+        {
+            return IsBST(_head, int.MinValue, int.MaxValue);
+        }
+
+        private bool IsBST(BinaryTreeNode<T> root, int lowerLimit, int upperLimit)
+        {
+            if (root == null)
+                return true;
+
+            int value = int.Parse(root.Value.ToString());
+            if (value <= lowerLimit || value >= upperLimit)
+                return false;
+
+            return IsBST(root.Left, lowerLimit, value) && IsBST(root.Right, value, upperLimit);
+        }
+
+        /// <summary>
+        /// Method to check if the tree is BST or not. (It will always retrun true for this tree
+        /// as it is BST but this method can check for any binary tree).
+        /// </summary>
+        /// <returns>True if the tree is BST otherwise False</returns>
+        public bool IterativeIsValidBST()
+        {
+            if (_count == 0)
+                return true;
+
+            Stack<BinaryTreeNode<T>> stack = new Stack<BinaryTreeNode<T>>();
+            BinaryTreeNode<T> current = _head;
+            BinaryTreeNode<T> prev = null;
+
+            while (current != null || stack.Count > 0)
+            {
+                while (current != null)
+                {
+                    stack.Push(current);
+                    current = current.Left;
+                }
+
+                current = stack.Pop();
+
+                if (prev != null && prev.Value.CompareTo(current.Value) >= 0)
+                    return false;
+
+                prev = current;
+                current = current.Right;
+            }
+
+            return true;
+        }
     }
 }
