@@ -700,5 +700,54 @@ namespace DataStructures.Core.BinarySearchTree
 
             return true;
         }
+
+        public int RecursiveMaxDepth()
+        {
+            return RecursiveMaxDepthHelper(_head);
+        }
+
+        private int RecursiveMaxDepthHelper(BinaryTreeNode<T> node)
+        {
+            if (node is null)
+                return 0;
+
+            int left = RecursiveMaxDepthHelper(node.Left);
+            int right = RecursiveMaxDepthHelper(node.Right);
+
+            return Math.Max(left, right) + 1;
+        }
+
+        public int IterativeMaxDepth()
+        {
+            if (_head is null)
+                return 0;
+
+            Queue<BinaryTreeNode<T>> queue = new Queue<BinaryTreeNode<T>>();
+            queue.Enqueue(_head);
+
+            int height = 0;
+            while (true)
+            {
+                int nodesAtCurrentLevel = queue.Count;
+
+                if (nodesAtCurrentLevel == 0)
+                    return height;
+
+                height++;
+
+                while (nodesAtCurrentLevel > 0)
+                {
+                    var newNode = queue.Dequeue();
+
+                    if (newNode.Left != null)
+                        queue.Enqueue(newNode.Left);
+
+                    if (newNode.Right != null)
+                        queue.Enqueue(newNode.Right);
+
+                    nodesAtCurrentLevel--;
+                }
+            }
+        }
     }
 }
