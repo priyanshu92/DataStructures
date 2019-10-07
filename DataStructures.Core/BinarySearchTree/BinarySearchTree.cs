@@ -308,7 +308,8 @@ namespace DataStructures.Core.BinarySearchTree
         {
             PreOrder,
             PostOrder,
-            InOrder
+            InOrder,
+            LevelOrder
         }
 
         public void Traverse(Action<T> action, TraversalType traversalType)
@@ -332,11 +333,15 @@ namespace DataStructures.Core.BinarySearchTree
                     Traverse(action, traversalType, node.Right);
                     action(node.Value);
                 }
-                else
+                else if (traversalType == TraversalType.InOrder)
                 {
                     Traverse(action, traversalType, node.Left);
                     action(node.Value);
                     Traverse(action, traversalType, node.Right);
+                }
+                else
+                {
+                    LevelOrderTraversal(action);
                 }
             }
         }
@@ -435,6 +440,30 @@ namespace DataStructures.Core.BinarySearchTree
                 current = current.Right;
             }
             return current.Value;
+        }
+
+        private void LevelOrderTraversal(Action<T> action)
+        {
+            Queue<BinaryTreeNode<T>> queue = new Queue<BinaryTreeNode<T>>();
+
+            if (_head is null)
+            {
+                return;
+            }
+
+            queue.Enqueue(_head);
+
+            while (queue.Count != 0)
+            {
+                var node = queue.Dequeue();
+
+                action(node.Value);
+
+                if (node.Left != null)
+                    queue.Enqueue(node.Left);
+                if (node.Right != null)
+                    queue.Enqueue(node.Right);
+            }
         }
     }
 }
