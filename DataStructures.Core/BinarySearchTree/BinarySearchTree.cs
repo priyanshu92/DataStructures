@@ -309,7 +309,10 @@ namespace DataStructures.Core.BinarySearchTree
             PreOrder,
             PostOrder,
             InOrder,
-            LevelOrder
+            LevelOrder,
+            IterativeInOrder,
+            IterativePreOrder,
+            IterativePostOrder
         }
 
         public void Traverse(Action<T> action, TraversalType traversalType)
@@ -339,9 +342,21 @@ namespace DataStructures.Core.BinarySearchTree
                     action(node.Value);
                     Traverse(action, traversalType, node.Right);
                 }
-                else
+                else if (traversalType == TraversalType.LevelOrder)
                 {
                     LevelOrderTraversal(action);
+                }
+                else if (traversalType == TraversalType.IterativeInOrder)
+                {
+                    IterativeInOrderTraversal(action);
+                }
+                else if (traversalType == TraversalType.IterativePreOrder)
+                {
+                    IterativePreOrderTraversal(action);
+                }
+                else
+                {
+                    IterativePostOrderTraversal(action);
                 }
             }
         }
@@ -356,7 +371,7 @@ namespace DataStructures.Core.BinarySearchTree
             {
                 Stack<BinaryTreeNode<T>> stack = new Stack<BinaryTreeNode<T>>();
 
-                BinaryTreeNode<T> current = _head;
+                var current = _head;
 
                 bool goLeftNext = true;
 
@@ -533,6 +548,100 @@ namespace DataStructures.Core.BinarySearchTree
                 current = current.Value.CompareTo(node1.Value) > 0 && current.Value.CompareTo(node2.Value) > 0
                     ? current.Left
                     : current.Right;
+            }
+        }
+
+        private void IterativeInOrderTraversal(Action<T> action)
+        {
+            if (_count == 0)
+                return;
+
+            var current = _head;
+
+            Stack<BinaryTreeNode<T>> stack = new Stack<BinaryTreeNode<T>>();
+            bool goLeftNext = true;
+
+            while (current != null)
+            {
+                if (goLeftNext)
+                {
+                    while (current.Left != null)
+                    {
+                        stack.Push(current);
+                        current = current.Left;
+                    }
+                }
+
+                action(current.Value);
+
+                if (current.Right != null)
+                {
+                    current = current.Right;
+
+                    goLeftNext = true;
+                }
+                else
+                {
+                    if (stack.Count == 0)
+                        current = null;
+                    else
+                        current = stack.Pop();
+                    goLeftNext = false;
+                }
+            }
+        }
+
+        private void IterativePreOrderTraversal(Action<T> action)
+        {
+            if (_count == 0)
+                return;
+
+            Stack<BinaryTreeNode<T>> stack = new Stack<BinaryTreeNode<T>>();
+            stack.Push(_head);
+
+            while (stack.Count > 0)
+            {
+                var current = stack.Pop();
+
+                action(current.Value);
+
+                if (current.Right != null)
+                {
+                    stack.Push(current.Right);
+                }
+
+                if (current.Left != null)
+                {
+                    stack.Push(current.Left);
+                }
+            }
+        }
+
+        private void IterativePostOrderTraversal(Action<T> action)
+        {
+            if (_count == 0)
+                return;
+
+            Stack<BinaryTreeNode<T>> s1 = new Stack<BinaryTreeNode<T>>();
+            Stack<BinaryTreeNode<T>> s2 = new Stack<BinaryTreeNode<T>>();
+
+            s1.Push(_head);
+
+            while (s1.Count > 0)
+            {
+                var current = s1.Pop();
+                s2.Push(current);
+
+                if (current.Left != null)
+                    s1.Push(current.Left);
+
+                if (current.Right != null)
+                    s1.Push(current.Right);
+            }
+
+            while (s2.Count > 0)
+            {
+                action(s2.Pop().Value);
             }
         }
     }
