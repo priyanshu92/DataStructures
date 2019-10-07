@@ -477,9 +477,21 @@ namespace DataStructures.Core.BinarySearchTree
         /// <returns>The value of the least common ancestor</returns>
         public T LeastCommonAncestor(BinaryTreeNode<T> node1, BinaryTreeNode<T> node2)
         {
-            return FindLCA(_head, node1, node2).Value;
+            var node = FindLCA(_head, node1, node2);
+            if (node is null)
+            {
+                return default;
+            }
+            return node.Value;
         }
 
+        /// <summary>
+        /// Recursively finds the least common ancestor for 2 given nodes
+        /// </summary>
+        /// <param name="currentNode">The current node in the tree</param>
+        /// <param name="node1">The first node</param>
+        /// <param name="node2">The second node</param>
+        /// <returns>The least common ancestor node</returns>
         private BinaryTreeNode<T> FindLCA(BinaryTreeNode<T> currentNode, BinaryTreeNode<T> node1, BinaryTreeNode<T> node2)
         {
             if (currentNode == null)
