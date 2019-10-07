@@ -35,7 +35,7 @@ namespace DataStructures.Core.BinarySearchTree
             //CASE 2: The tree is not empty so find the right location to insert the value.
             else
             {
-                AddTo(_head, value);
+                IterativeAddTo(value);
             }
 
             //Update the current number of nodes
@@ -106,6 +106,41 @@ namespace DataStructures.Core.BinarySearchTree
                 else
                 {
                     AddTo(node.Right, value);
+                }
+            }
+        }
+
+        private void IterativeAddTo(T value)
+        {
+            BinaryTreeNode<T> nodeToAdd = new BinaryTreeNode<T>(value);
+
+            var current = _head;
+
+            while (true)
+            {
+                if (value.CompareTo(current.Value) < 0)
+                {
+                    if (current.Left is null)
+                    {
+                        current.Left = nodeToAdd;
+                        return;
+                    }
+                    else
+                    {
+                        current = current.Left;
+                    }
+                }
+                else
+                {
+                    if (current.Right is null)
+                    {
+                        current.Right = nodeToAdd;
+                        return;
+                    }
+                    else
+                    {
+                        current = current.Right;
+                    }
                 }
             }
         }
