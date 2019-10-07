@@ -414,5 +414,27 @@ namespace DataStructures.Core.BinarySearchTree
         {
             return GetEnumerator();
         }
+
+        public T GetMinimumValue()
+        {
+            var current = _head;
+
+            while (current.Left != null)
+            {
+                current = current.Left;
+            }
+            return current.Value;
+        }
+
+        public T GetMaximumValue()
+        {
+            var current = _head;
+
+            while (current.Right != null)
+            {
+                current = current.Right;
+            }
+            return current.Value;
+        }
     }
 }
