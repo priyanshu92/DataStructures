@@ -320,8 +320,6 @@ namespace DataStructures.Core.BinarySearchTree
 
                 bool goLeftNext = true;
 
-                stack.Push(current);
-
                 while (current != null)
                 {
                     if (goLeftNext)
@@ -343,7 +341,10 @@ namespace DataStructures.Core.BinarySearchTree
                     }
                     else
                     {
-                        current = stack.Pop();
+                        if (stack.Count == 0)
+                            current = null;
+                        else
+                            current = stack.Pop();
                         goLeftNext = false;
                     }
                 }
