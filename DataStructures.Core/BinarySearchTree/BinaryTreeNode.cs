@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace DataStructures.Core.BinarySearchTree
 {
@@ -7,6 +8,7 @@ namespace DataStructures.Core.BinarySearchTree
     /// and a pointer to right node.
     /// </summary>
     /// <typeparam name="TNode">The type of data to be stored</typeparam>
+    [DebuggerDisplay("Value: {Value}")]
     public class BinaryTreeNode<TNode> : IComparable<TNode>
         where TNode : IComparable<TNode>
     {

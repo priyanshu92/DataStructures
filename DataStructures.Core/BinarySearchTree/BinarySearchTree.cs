@@ -509,5 +509,31 @@ namespace DataStructures.Core.BinarySearchTree
             return leftLCA
                 ?? rightLCA;
         }
+
+        /// <summary>
+        /// Finds the least common ancestor in a BST using the BST property
+        /// </summary>
+        /// <param name="node1">The first node</param>
+        /// <param name="node2">The second node</param>
+        /// <returns>The value of the least common ancestor node</returns>
+        public T LeastCommonAncestorInBST(BinaryTreeNode<T> node1, BinaryTreeNode<T> node2)
+        {
+            if (_head == null)
+                return default;
+
+            var current = _head;
+
+            while (true)
+            {
+                if ((current.Value.CompareTo(node1.Value) < 0 && current.Value.CompareTo(node2.Value) > 0) || (current.Value.CompareTo(node1.Value) > 0 && current.Value.CompareTo(node2.Value) < 0))
+                {
+                    return current.Value;
+                }
+
+                current = current.Value.CompareTo(node1.Value) > 0 && current.Value.CompareTo(node2.Value) > 0
+                    ? current.Left
+                    : current.Right;
+            }
+        }
     }
 }
