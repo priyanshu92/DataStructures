@@ -8,13 +8,13 @@ namespace DataStructures.Console
         private static void Main(string[] args)
         {
             int[] arr = new int[] { 17, 6, 15, 3, 1, 4, 4 };
-            BinaryHeap heap = BinaryHeap.BuildHeap(arr, BinaryHeapType.MaxHeap);
 
-            WriteLine(heap.Max);
-            heap.Delete();
-            WriteLine(heap.Max);
-            heap.Delete();
-            WriteLine(heap.Max);
+            BinaryHeap.Sort(ref arr);
+
+            foreach (var item in arr)
+            {
+                WriteLine(item);
+            }
         }
     }
 }

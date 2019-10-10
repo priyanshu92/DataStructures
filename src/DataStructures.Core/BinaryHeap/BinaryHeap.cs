@@ -193,5 +193,32 @@ namespace DataStructures.Core.BinaryHeap
 
             return heap;
         }
+
+        public static void Sort(ref int[] inputArray)
+        {
+            if (inputArray is null || inputArray.Length == 0)
+                return;
+
+            var heap = BuildHeap(inputArray, BinaryHeapType.MaxHeap);
+
+            for (int i = 0; i < inputArray.Length; i++)
+            {
+                Swap(ref heap._items[0], ref heap._items[heap._count - 1]);
+                heap._count--;
+                heap.PercolateDown(0);
+            }
+
+            for (int i = 0; i < inputArray.Length; i++)
+            {
+                inputArray[i] = heap._items[i];
+            }
+        }
+
+        private static void Swap(ref int item1, ref int item2)
+        {
+            int temp = item1;
+            item1 = item2;
+            item2 = temp;
+        }
     }
 }
