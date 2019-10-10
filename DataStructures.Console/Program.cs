@@ -1,7 +1,4 @@
-﻿using DataStructures.Core;
-using DataStructures.Core.BinaryHeap;
-using System;
-using System.Collections.Generic;
+﻿using DataStructures.Core.BinaryHeap;
 using static System.Console;
 
 namespace DataStructures.Console
@@ -10,14 +7,8 @@ namespace DataStructures.Console
     {
         private static void Main(string[] args)
         {
-            BinaryHeap heap = new BinaryHeap(BinaryHeapType.MaxHeap);
-            heap.Add(1);
-            heap.Add(4);
-            heap.Add(4);
-            heap.Add(3);
-            heap.Add(15);
-            heap.Add(6);
-            heap.Add(17);
+            int[] arr = new int[] { 17, 6, 15, 3, 1, 4, 4 };
+            BinaryHeap heap = BinaryHeap.BuildHeap(arr, BinaryHeapType.MaxHeap);
 
             WriteLine(heap.Max);
             heap.Delete();
