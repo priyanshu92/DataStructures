@@ -194,7 +194,7 @@ namespace DataStructures.Core.BinaryHeap
             return heap;
         }
 
-        public static void Sort(ref int[] inputArray)
+        public static void Sort(int[] inputArray)
         {
             if (inputArray is null || inputArray.Length == 0)
                 return;

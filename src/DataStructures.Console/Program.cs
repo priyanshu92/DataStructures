@@ -9,7 +9,7 @@ namespace DataStructures.Console
         {
             int[] arr = new int[] { 17, 6, 15, 3, 1, 4, 4 };
 
-            BinaryHeap.Sort(ref arr);
+            BinaryHeap.Sort(arr);
 
             foreach (var item in arr)
             {
