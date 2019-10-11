@@ -38,7 +38,41 @@ namespace DataStructures.Core.Graph
 
         private void BreadthFirstSearch(Action<T> action)
         {
-            throw new NotImplementedException();
+            HashSet<Vertex<T>> visitedNodes = new HashSet<Vertex<T>>();
+
+            foreach (var vertex in Vertices)
+            {
+                if (!visitedNodes.Contains(vertex))
+                    BreadthFirstSearch(vertex, action, visitedNodes);
+            }
+        }
+
+        private void BreadthFirstSearch(Vertex<T> source, Action<T> action, HashSet<Vertex<T>> visitedNodes = null)
+        {
+            if (visitedNodes == null)
+                visitedNodes = new HashSet<Vertex<T>>();
+
+            Queue<Vertex<T>> queue = new Queue<Vertex<T>>();
+            queue.Enqueue(source);
+
+            if (!visitedNodes.Contains(source))
+                visitedNodes.Add(source);
+
+            while (queue.Count > 0)
+            {
+                var currentVertex = queue.Dequeue();
+
+                action(currentVertex.Value);
+
+                foreach (var neighbour in currentVertex.Neighbours)
+                {
+                    if (!visitedNodes.Contains(neighbour.Key))
+                    {
+                        queue.Enqueue(neighbour.Key);
+                        visitedNodes.Add(neighbour.Key);
+                    }
+                }
+            }
         }
     }
 }

@@ -50,7 +50,7 @@ namespace DataStructures.Core.Graph
             return true;
         }
 
-        public bool AddDirectedEdge(T fromValue, T toValue, int cost) => AddDirectedEdge(Find(fromValue), Find(toValue), cost);
+        public bool AddDirectedEdge(T fromValue, T toValue, int cost) => AddDirectedEdge(FindVertex(fromValue), FindVertex(toValue), cost);
 
         public bool AddUndirectedEdge(Vertex<T> from, Vertex<T> to, int cost)
         {
@@ -70,7 +70,7 @@ namespace DataStructures.Core.Graph
             return true;
         }
 
-        public bool AddUndirectedEdge(T fromValue, T toValue, int cost) => AddUndirectedEdge(Find(fromValue), Find(toValue), cost);
+        public bool AddUndirectedEdge(T fromValue, T toValue, int cost) => AddUndirectedEdge(FindVertex(fromValue), FindVertex(toValue), cost);
 
         public void TraverseAllVertices(Action<T> action, GraphTraversalType graphTraversalType)
         {
@@ -91,11 +91,15 @@ namespace DataStructures.Core.Graph
 
                 DepthFirstSearchVisit(vertex, action, parents);
             }
+            else
+            {
+                BreadthFirstSearch(vertex, action);
+            }
         }
 
-        public void TraverseFromVertex(T value, Action<T> action, GraphTraversalType graphTraversalType) => TraverseFromVertex(Find(value), action, graphTraversalType);
+        public void TraverseFromVertex(T value, Action<T> action, GraphTraversalType graphTraversalType) => TraverseFromVertex(FindVertex(value), action, graphTraversalType);
 
-        public Vertex<T> Find(T value)
+        public Vertex<T> FindVertex(T value)
         {
             if (Vertices.Count == 0)
                 return null;
