@@ -22,8 +22,14 @@ namespace DataStructures.Core.Graph
             }
         }
 
-        private void DepthFirstSearchVisit(Vertex<T> vertex, Action<T> action, Dictionary<Vertex<T>, Vertex<T>> parents)
+        private void DepthFirstSearchVisit(Vertex<T> vertex, Action<T> action, Dictionary<Vertex<T>, Vertex<T>> parents = null)
         {
+            if (parents is null)
+                parents = new Dictionary<Vertex<T>, Vertex<T>>();
+
+            if (!parents.ContainsKey(vertex))
+                parents.Add(vertex, null);
+
             action(vertex.Value);
 
             foreach (var neighbour in vertex.Neighbours)
@@ -38,25 +44,28 @@ namespace DataStructures.Core.Graph
 
         private void BreadthFirstSearch(Action<T> action)
         {
-            HashSet<Vertex<T>> visitedNodes = new HashSet<Vertex<T>>();
+            if (Vertices.Count == 0)
+                return;
+
+            Dictionary<Vertex<T>, Vertex<T>> parents = new Dictionary<Vertex<T>, Vertex<T>>();
 
             foreach (var vertex in Vertices)
             {
-                if (!visitedNodes.Contains(vertex))
-                    BreadthFirstSearch(vertex, action, visitedNodes);
+                if (!parents.ContainsKey(vertex))
+                    BreadthFirstSearch(vertex, action, parents);
             }
         }
 
-        private void BreadthFirstSearch(Vertex<T> source, Action<T> action, HashSet<Vertex<T>> visitedNodes = null)
+        private void BreadthFirstSearch(Vertex<T> source, Action<T> action, Dictionary<Vertex<T>, Vertex<T>> parents = null)
         {
-            if (visitedNodes == null)
-                visitedNodes = new HashSet<Vertex<T>>();
+            if (parents == null)
+                parents = new Dictionary<Vertex<T>, Vertex<T>>();
 
             Queue<Vertex<T>> queue = new Queue<Vertex<T>>();
             queue.Enqueue(source);
 
-            if (!visitedNodes.Contains(source))
-                visitedNodes.Add(source);
+            if (!parents.ContainsKey(source))
+                parents.Add(source, null);
 
             while (queue.Count > 0)
             {
@@ -66,10 +75,10 @@ namespace DataStructures.Core.Graph
 
                 foreach (var neighbour in currentVertex.Neighbours)
                 {
-                    if (!visitedNodes.Contains(neighbour.Key))
+                    if (!parents.ContainsKey(neighbour.Key))
                     {
                         queue.Enqueue(neighbour.Key);
-                        visitedNodes.Add(neighbour.Key);
+                        parents.Add(neighbour.Key, source);
                     }
                 }
             }

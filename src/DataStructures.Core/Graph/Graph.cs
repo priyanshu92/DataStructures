@@ -84,12 +84,7 @@ namespace DataStructures.Core.Graph
         {
             if (graphTraversalType == GraphTraversalType.DepthFirstSearch)
             {
-                Dictionary<Vertex<T>, Vertex<T>> parents = new Dictionary<Vertex<T>, Vertex<T>>
-                {
-                    { vertex, null }
-                };
-
-                DepthFirstSearchVisit(vertex, action, parents);
+                DepthFirstSearchVisit(vertex, action);
             }
             else
             {

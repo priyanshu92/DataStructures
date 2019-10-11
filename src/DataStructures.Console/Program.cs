@@ -24,7 +24,7 @@ namespace DataStructures.Console
             g.AddUndirectedEdge(2, 5, 0);
             g.AddUndirectedEdge(4, 5, 0);
 
-            g.TraverseAllVertices((t) => WriteLine(t), GraphTraversalType.BreadthFirstSearch);
+            g.TraverseFromVertex(1, (t) => WriteLine(t), GraphTraversalType.DepthFirstSearch);
         }
     }
 }
