@@ -15,22 +15,16 @@ namespace DataStructures.Console
             g.AddVertex(4);
             g.AddVertex(5);
             g.AddVertex(6);
+            g.AddVertex(7);
 
-            //g.AddDirectedEdge(1, 3, 0);
-            //g.AddDirectedEdge(3, 4, 0);
-            //g.AddDirectedEdge(1, 4, 0);
-            //g.AddDirectedEdge(0, 1, 0);
-            //g.AddDirectedEdge(0, 2, 0);
-            //g.AddDirectedEdge(2, 4, 0);
-            //g.AddDirectedEdge(4, 2, 0);
-
-            g.AddDirectedEdge(0, 1, 0);
             g.AddDirectedEdge(1, 2, 0);
             g.AddDirectedEdge(1, 3, 0);
-            g.AddDirectedEdge(3, 4, 0);
-            g.AddDirectedEdge(5, 6, 0);
-            g.AddDirectedEdge(6, 3, 0);
-            g.AddDirectedEdge(6, 4, 0);
+            g.AddDirectedEdge(4, 2, 0);
+            g.AddDirectedEdge(2, 5, 0);
+            g.AddDirectedEdge(3, 6, 0);
+            g.AddDirectedEdge(7, 4, 0);
+            g.AddDirectedEdge(5, 7, 0);
+            g.AddDirectedEdge(6, 7, 0);
 
             if (g.IsCyclic())
                 WriteLine("Cyclic Graph");

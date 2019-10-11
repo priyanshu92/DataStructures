@@ -138,46 +138,99 @@ namespace DataStructures.Core.Graph
             Exit
         }
 
-        private bool IsCyclicDirected()
+        private bool IsCyclicDirectedWithStates()
         {
             if (TypeOfGraph != GraphType.Directed)
                 throw new InvalidOperationException("The graph is undirected");
 
+            HashSet<Vertex<T>> visited = new HashSet<Vertex<T>>();
+            HashSet<Vertex<T>> onStack = new HashSet<Vertex<T>>();
+            Stack<Vertex<T>> stack = new Stack<Vertex<T>>();
             var rootVertices = GetRootVertices();
-            if (rootVertices.Count == 0)
-                return true;
 
             foreach (var vertex in rootVertices)
             {
-                Dictionary<Vertex<T>, ColorType> states = new Dictionary<Vertex<T>, ColorType>();
-                Vertices.ForEach((v) => states.Add(v, ColorType.White));
+                if (visited.Contains(vertex))
+                    continue;
 
-                Stack<KeyValuePair<Vertex<T>, ProcessingStateType>> stack = new Stack<KeyValuePair<Vertex<T>, ProcessingStateType>>();
-                stack.Push(new KeyValuePair<Vertex<T>, ProcessingStateType>(vertex, ProcessingStateType.Enter));
+                stack.Push(vertex);
 
                 while (stack.Count > 0)
                 {
                     var currentVertex = stack.Pop();
 
-                    if (currentVertex.Value == ProcessingStateType.Exit)
+                    if (visited.Contains(currentVertex))
                     {
-                        states[currentVertex.Key] = ColorType.Black;
+                        onStack.Remove(currentVertex);
                     }
                     else
                     {
-                        states[currentVertex.Key] = ColorType.Gray;
-                        stack.Push(new KeyValuePair<Vertex<T>, ProcessingStateType>(currentVertex.Key, ProcessingStateType.Exit));
+                        visited.Add(currentVertex);
+                        onStack.Add(currentVertex);
+                        stack.Push(currentVertex);
                     }
 
-                    foreach (var neighbour in currentVertex.Key.Neighbours)
+                    foreach (var neighbour in currentVertex.Neighbours)
                     {
-                        if (states[neighbour.Key] == ColorType.Gray)
+                        if (!visited.Contains(neighbour.Key))
+                        {
+                            stack.Push(neighbour.Key);
+                        }
+                        else if (onStack.Contains(neighbour.Key))
                         {
                             return true;
                         }
-                        else if (states[neighbour.Key] == ColorType.White)
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private bool IsCyclicDirected()
+        {
+            if (TypeOfGraph != GraphType.Directed)
+                throw new InvalidOperationException("The graph is undirected");
+
+            HashSet<Vertex<T>> visited = new HashSet<Vertex<T>>();
+            HashSet<Vertex<T>> onStack = new HashSet<Vertex<T>>();
+            Stack<Vertex<T>> stack = new Stack<Vertex<T>>();
+            var rootVertices = GetRootVertices();
+
+            if (rootVertices.Count == 0)
+                return true;
+
+            foreach (var vertex in rootVertices)
+            {
+                if (visited.Contains(vertex))
+                    continue;
+
+                stack.Push(vertex);
+
+                while (stack.Count > 0)
+                {
+                    var currentVertex = stack.Pop();
+
+                    if (visited.Contains(currentVertex))
+                    {
+                        onStack.Remove(currentVertex);
+                    }
+                    else
+                    {
+                        visited.Add(currentVertex);
+                        onStack.Add(currentVertex);
+                        stack.Push(currentVertex);
+                    }
+
+                    foreach (var neighbour in currentVertex.Neighbours)
+                    {
+                        if (!visited.Contains(neighbour.Key))
                         {
-                            stack.Push(new KeyValuePair<Vertex<T>, ProcessingStateType>(neighbour.Key, ProcessingStateType.Enter));
+                            stack.Push(neighbour.Key);
+                        }
+                        else if (onStack.Contains(neighbour.Key))
+                        {
+                            return true;
                         }
                     }
                 }
