@@ -7,28 +7,28 @@ namespace DataStructures.Console
     {
         private static void Main(string[] args)
         {
-            Graph<char> g = new Graph<char>();
-            g.AddVertex('A');
-            g.AddVertex('B');
-            g.AddVertex('C');
-            g.AddVertex('D');
-            g.AddVertex('E');
-            g.AddVertex('F');
+            Graph<int> g = new Graph<int>();
+            g.AddVertex(0);
+            g.AddVertex(1);
+            g.AddVertex(2);
+            g.AddVertex(3);
 
-            g.AddUndirectedEdge('A', 'B', 0);
-            g.AddUndirectedEdge('B', 'D', 0);
-            g.AddUndirectedEdge('D', 'F', 0);
-            g.AddUndirectedEdge('F', 'E', 0);
-            g.AddUndirectedEdge('E', 'C', 0);
-            g.AddUndirectedEdge('C', 'A', 0);
-            g.AddUndirectedEdge('B', 'E', 0);
-            g.AddUndirectedEdge('D', 'E', 0);
+            //g.AddDirectedEdge(0, 1, 0);
+            //g.AddDirectedEdge(0, 2, 0);
+            //g.AddDirectedEdge(1, 2, 0);
+            //g.AddDirectedEdge(2, 0, 0);
+            //g.AddDirectedEdge(2, 3, 0);
 
-            WriteLine("Breadth First Search Traversal: ");
-            g.TraverseAllVertices((t) => Write($"{t} "), GraphTraversalType.BreadthFirstSearch);
-            WriteLine("\n\n");
-            WriteLine("Depth First Search Traversal: ");
-            g.TraverseAllVertices((t) => Write($"{t} "), GraphTraversalType.DepthFirstSearch);
+            g.AddUndirectedEdge(1, 0, 0);
+            g.AddUndirectedEdge(1, 2, 0);
+            g.AddUndirectedEdge(0, 3, 0);
+            //g.AddUndirectedEdge(2, 3, 0);
+
+            if (g.IsCyclic())
+                WriteLine("Cyclic Graph");
+            else
+                WriteLine("Acyclic Graph");
+
             WriteLine();
         }
     }
