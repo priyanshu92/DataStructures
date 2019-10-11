@@ -11,13 +11,15 @@ namespace DataStructures.Core.BinarySearchTree
     public class BinarySearchTree<T> : IEnumerable<T>
         where T : IComparable<T>
     {
-        private BinaryTreeNode<T> _head;
-        private int _count;
+        /// <summary>
+        /// A reference to the root of the <see cref="BinarySearchTree{T}"/>
+        /// </summary>
+        public BinaryTreeNode<T> Root { get; private set; }
 
-        public BinaryTreeNode<T> Root
-        {
-            get { return _head; }
-        }
+        /// <summary>
+        /// The number of items currently in the tree
+        /// </summary>
+        public int Count { get; private set; }
 
         #region Add
 
@@ -28,9 +30,9 @@ namespace DataStructures.Core.BinarySearchTree
         public void Add(T value)
         {
             //CASE 1: The tree is empty - allocate the head to the value.
-            if (_head == null)
+            if (Root == null)
             {
-                _head = new BinaryTreeNode<T>(value);
+                Root = new BinaryTreeNode<T>(value);
             }
             //CASE 2: The tree is not empty so find the right location to insert the value.
             else
@@ -39,7 +41,7 @@ namespace DataStructures.Core.BinarySearchTree
             }
 
             //Update the current number of nodes
-            _count++;
+            Count++;
         }
 
         public void Add(BinaryTreeNode<T> node)
@@ -47,11 +49,11 @@ namespace DataStructures.Core.BinarySearchTree
             if (node is null)
                 return;
 
-            if (_head is null)
-                _head = node;
+            if (Root is null)
+                Root = node;
             else
-                AddTo(_head, node);
-            _count++;
+                AddTo(Root, node);
+            Count++;
         }
 
         private void AddTo(BinaryTreeNode<T> node, BinaryTreeNode<T> nodeToAdd)
@@ -114,7 +116,7 @@ namespace DataStructures.Core.BinarySearchTree
         {
             BinaryTreeNode<T> nodeToAdd = new BinaryTreeNode<T>(value);
 
-            var current = _head;
+            var current = Root;
 
             while (true)
             {
@@ -167,7 +169,7 @@ namespace DataStructures.Core.BinarySearchTree
         /// <returns>The found node (or null).</returns>
         private BinaryTreeNode<T> FindWithParent(T value, out BinaryTreeNode<T> parent)
         {
-            BinaryTreeNode<T> current = _head;
+            BinaryTreeNode<T> current = Root;
             parent = null;
 
             while (current != null)
@@ -213,14 +215,14 @@ namespace DataStructures.Core.BinarySearchTree
                 return false;
             }
 
-            _count--;
+            Count--;
 
             //CASE 1: The current as no right child
             if (current.Right == null)
             {
                 if (parent == null)
                 {
-                    _head = current.Left;
+                    Root = current.Left;
                 }
                 else
                 {
@@ -244,7 +246,7 @@ namespace DataStructures.Core.BinarySearchTree
 
                 if (parent == null)
                 {
-                    _head = current.Right;
+                    Root = current.Right;
                 }
                 else
                 {
@@ -280,7 +282,7 @@ namespace DataStructures.Core.BinarySearchTree
 
                 if (parent == null)
                 {
-                    _head = leftMost;
+                    Root = leftMost;
                 }
                 else
                 {
@@ -317,7 +319,7 @@ namespace DataStructures.Core.BinarySearchTree
 
         public void Traverse(Action<T> action, TraversalType traversalType)
         {
-            Traverse(action, traversalType, _head);
+            Traverse(action, traversalType, Root);
         }
 
         public void Traverse(Action<T> action, TraversalType traversalType, BinaryTreeNode<T> node)
@@ -367,11 +369,11 @@ namespace DataStructures.Core.BinarySearchTree
         /// <returns>The enumerator</returns>
         public IEnumerator<T> InOrderTraversal()
         {
-            if (_head != null)
+            if (Root != null)
             {
                 Stack<BinaryTreeNode<T>> stack = new Stack<BinaryTreeNode<T>>();
 
-                var current = _head;
+                var current = Root;
 
                 bool goLeftNext = true;
 
@@ -413,16 +415,8 @@ namespace DataStructures.Core.BinarySearchTree
         /// </summary>
         public void Clear()
         {
-            _count = 0;
-            _head = null;
-        }
-
-        /// <summary>
-        /// The number of items currently in the tree/
-        /// </summary>
-        public int Count
-        {
-            get { return _count; }
+            Count = 0;
+            Root = null;
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -437,7 +431,7 @@ namespace DataStructures.Core.BinarySearchTree
 
         public T GetMinimumValue()
         {
-            var current = _head;
+            var current = Root;
 
             while (current.Left != null)
             {
@@ -448,7 +442,7 @@ namespace DataStructures.Core.BinarySearchTree
 
         public T GetMaximumValue()
         {
-            var current = _head;
+            var current = Root;
 
             while (current.Right != null)
             {
@@ -461,12 +455,12 @@ namespace DataStructures.Core.BinarySearchTree
         {
             Queue<BinaryTreeNode<T>> queue = new Queue<BinaryTreeNode<T>>();
 
-            if (_head is null)
+            if (Root is null)
             {
                 return;
             }
 
-            queue.Enqueue(_head);
+            queue.Enqueue(Root);
 
             while (queue.Count != 0)
             {
@@ -492,7 +486,7 @@ namespace DataStructures.Core.BinarySearchTree
         /// <returns>The value of the least common ancestor</returns>
         public T LeastCommonAncestor(BinaryTreeNode<T> node1, BinaryTreeNode<T> node2)
         {
-            var node = FindLCA(_head, node1, node2);
+            var node = FindLCA(Root, node1, node2);
             if (node is null)
             {
                 return default;
@@ -533,10 +527,10 @@ namespace DataStructures.Core.BinarySearchTree
         /// <returns>The value of the least common ancestor node</returns>
         public T LeastCommonAncestorInBST(BinaryTreeNode<T> node1, BinaryTreeNode<T> node2)
         {
-            if (_head == null)
+            if (Root == null)
                 return default;
 
-            var current = _head;
+            var current = Root;
 
             while (true)
             {
@@ -553,10 +547,10 @@ namespace DataStructures.Core.BinarySearchTree
 
         private void IterativeInOrderTraversal(Action<T> action)
         {
-            if (_count == 0)
+            if (Count == 0)
                 return;
 
-            var current = _head;
+            var current = Root;
 
             Stack<BinaryTreeNode<T>> stack = new Stack<BinaryTreeNode<T>>();
             bool goLeftNext = true;
@@ -593,11 +587,11 @@ namespace DataStructures.Core.BinarySearchTree
 
         private void IterativePreOrderTraversal(Action<T> action)
         {
-            if (_count == 0)
+            if (Count == 0)
                 return;
 
             Stack<BinaryTreeNode<T>> stack = new Stack<BinaryTreeNode<T>>();
-            stack.Push(_head);
+            stack.Push(Root);
 
             while (stack.Count > 0)
             {
@@ -619,13 +613,13 @@ namespace DataStructures.Core.BinarySearchTree
 
         private void IterativePostOrderTraversal(Action<T> action)
         {
-            if (_count == 0)
+            if (Count == 0)
                 return;
 
             Stack<BinaryTreeNode<T>> s1 = new Stack<BinaryTreeNode<T>>();
             Stack<BinaryTreeNode<T>> s2 = new Stack<BinaryTreeNode<T>>();
 
-            s1.Push(_head);
+            s1.Push(Root);
 
             while (s1.Count > 0)
             {
@@ -652,7 +646,7 @@ namespace DataStructures.Core.BinarySearchTree
         /// <returns>True if the tree is BST otherwise False</returns>
         public bool RecursiveIsValidBST()
         {
-            return IsBST(_head, int.MinValue, int.MaxValue);
+            return IsBST(Root, int.MinValue, int.MaxValue);
         }
 
         private bool IsBST(BinaryTreeNode<T> root, int lowerLimit, int upperLimit)
@@ -674,11 +668,11 @@ namespace DataStructures.Core.BinarySearchTree
         /// <returns>True if the tree is BST otherwise False</returns>
         public bool IterativeIsValidBST()
         {
-            if (_count == 0)
+            if (Count == 0)
                 return true;
 
             Stack<BinaryTreeNode<T>> stack = new Stack<BinaryTreeNode<T>>();
-            BinaryTreeNode<T> current = _head;
+            BinaryTreeNode<T> current = Root;
             BinaryTreeNode<T> prev = null;
 
             while (current != null || stack.Count > 0)
@@ -703,7 +697,7 @@ namespace DataStructures.Core.BinarySearchTree
 
         public int RecursiveMaxDepth()
         {
-            return RecursiveMaxDepthHelper(_head);
+            return RecursiveMaxDepthHelper(Root);
         }
 
         private int RecursiveMaxDepthHelper(BinaryTreeNode<T> node)
@@ -719,11 +713,11 @@ namespace DataStructures.Core.BinarySearchTree
 
         public int IterativeMaxDepth()
         {
-            if (_head is null)
+            if (Root is null)
                 return 0;
 
             Queue<BinaryTreeNode<T>> queue = new Queue<BinaryTreeNode<T>>();
-            queue.Enqueue(_head);
+            queue.Enqueue(Root);
 
             int height = 0;
             while (true)

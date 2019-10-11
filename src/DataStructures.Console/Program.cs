@@ -1,4 +1,4 @@
-﻿using DataStructures.Core.BinaryHeap;
+﻿using DataStructures.Core.Graph;
 using static System.Console;
 
 namespace DataStructures.Console
@@ -7,14 +7,20 @@ namespace DataStructures.Console
     {
         private static void Main(string[] args)
         {
-            int[] arr = new int[] { 17, 6, 15, 3, 1, 4, 4 };
+            Graph<int> g = new Graph<int>();
+            g.AddVertex(0);
+            g.AddVertex(1);
+            g.AddVertex(2);
+            g.AddVertex(3);
 
-            BinaryHeap.Sort(arr);
+            g.AddDirectedEdge(0, 1, 0);
+            g.AddDirectedEdge(0, 2, 0);
+            g.AddDirectedEdge(1, 2, 0);
+            g.AddDirectedEdge(2, 0, 0);
+            g.AddDirectedEdge(2, 3, 0);
+            g.AddDirectedEdge(3, 3, 0);
 
-            foreach (var item in arr)
-            {
-                WriteLine(item);
-            }
+            g.TraverseAllVertices((t) => WriteLine(t), GraphTraversalType.DepthFirstSearch);
         }
     }
 }
