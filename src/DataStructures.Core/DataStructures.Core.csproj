@@ -50,6 +50,7 @@
     <Compile Include="Graph\Graph.cs" />
     <Compile Include="Graph\GraphAlgorithms.cs" />
     <Compile Include="Graph\GraphTraversalType.cs" />
+    <Compile Include="Graph\GraphType.cs" />
     <Compile Include="Graph\Vertex.cs" />
     <Compile Include="Linked List\LinkedList.cs" />
     <Compile Include="Linked List\LinkedListNode.cs" />

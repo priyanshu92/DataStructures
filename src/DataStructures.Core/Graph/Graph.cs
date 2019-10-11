@@ -15,6 +15,8 @@ namespace DataStructures.Core.Graph
             Vertices = vertices;
         }
 
+        public GraphType GraphType { get; private set; }
+
         public List<Vertex<T>> Vertices { get; } = new List<Vertex<T>>();
 
         public void AddVertex(Vertex<T> vertex)
@@ -46,6 +48,12 @@ namespace DataStructures.Core.Graph
             if (from.Neighbours.ContainsKey(to))
                 return false;
 
+            if (IsEmpty())
+                GraphType = GraphType.Directed;
+
+            if (GraphType != GraphType.Directed)
+                throw new InvalidOperationException("Cannot add a directed edge in an undirected graph");
+
             from.Neighbours.Add(to, cost);
             return true;
         }
@@ -56,6 +64,12 @@ namespace DataStructures.Core.Graph
         {
             if (from is null || to is null)
                 return false;
+
+            if (IsEmpty())
+                GraphType = GraphType.Undirected;
+
+            if (GraphType != GraphType.Undirected)
+                throw new InvalidOperationException("Cannot add an undirected edge in a directed graph");
 
             if (!from.Neighbours.ContainsKey(to))
             {
@@ -99,6 +113,14 @@ namespace DataStructures.Core.Graph
             if (Vertices.Count == 0)
                 return null;
             return Vertices.Find(x => x.Value.CompareTo(value) == 0);
+        }
+
+        public bool IsEmpty()
+        {
+            if (Vertices.Count == 0)
+                return true;
+
+            return Vertices.TrueForAll(x => x.Neighbours.Count == 0);
         }
 
         public IEnumerator<T> GetEnumerator()

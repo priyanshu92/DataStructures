@@ -8,7 +8,7 @@ namespace DataStructures.Core.Graph
     {
         private void DepthFirstSearch(Action<T> action)
         {
-            if (Vertices.Count == 0)
+            if (IsEmpty())
                 return;
 
             Dictionary<Vertex<T>, Vertex<T>> parents = new Dictionary<Vertex<T>, Vertex<T>>();
@@ -54,7 +54,7 @@ namespace DataStructures.Core.Graph
 
         private void BreadthFirstSearch(Action<T> action)
         {
-            if (Vertices.Count == 0)
+            if (IsEmpty())
                 return;
 
             Dictionary<Vertex<T>, Vertex<T>> parents = new Dictionary<Vertex<T>, Vertex<T>>();
@@ -92,6 +92,93 @@ namespace DataStructures.Core.Graph
                     }
                 }
             }
+        }
+
+        public bool IsCyclic()
+        {
+            if (IsEmpty())
+                return false;
+
+            return GraphType == GraphType.Undirected ? DetectCycleUndirected() : DetectCycleDirected();
+        }
+
+        private bool DetectCycleDirected()
+        {
+            Dictionary<Vertex<T>, Vertex<T>> parents = new Dictionary<Vertex<T>, Vertex<T>>();
+
+            foreach (var vertex in Vertices)
+            {
+                if (!parents.ContainsKey(vertex))
+                {
+                    parents.Add(vertex, null);
+
+                    if (!parents.ContainsKey(vertex))
+                        parents.Add(vertex, null);
+
+                    Stack<Vertex<T>> stack = new Stack<Vertex<T>>();
+
+                    stack.Push(vertex);
+
+                    while (stack.Count > 0)
+                    {
+                        var currentVertex = stack.Pop();
+
+                        foreach (var neighbour in currentVertex.Neighbours.Reverse())
+                        {
+                            if (!parents.ContainsKey(neighbour.Key))
+                            {
+                                parents.Add(neighbour.Key, currentVertex);
+                                stack.Push(neighbour.Key);
+                            }
+                            else
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private bool DetectCycleUndirected()
+        {
+            Dictionary<Vertex<T>, Vertex<T>> parents = new Dictionary<Vertex<T>, Vertex<T>>();
+
+            foreach (var vertex in Vertices)
+            {
+                if (!parents.ContainsKey(vertex))
+                {
+                    parents.Add(vertex, null);
+
+                    if (!parents.ContainsKey(vertex))
+                        parents.Add(vertex, null);
+
+                    Stack<Vertex<T>> stack = new Stack<Vertex<T>>();
+
+                    stack.Push(vertex);
+
+                    while (stack.Count > 0)
+                    {
+                        var currentVertex = stack.Pop();
+
+                        foreach (var neighbour in currentVertex.Neighbours.Reverse())
+                        {
+                            if (parents.ContainsKey(neighbour.Key) && parents[currentVertex] != neighbour.Key)
+                                return true;
+
+                            if (!parents.ContainsKey(neighbour.Key))
+                            {
+                                parents.Add(neighbour.Key, currentVertex);
+                                stack.Push(neighbour.Key);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
     }
 }
