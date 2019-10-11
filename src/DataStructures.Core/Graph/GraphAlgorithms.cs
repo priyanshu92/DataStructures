@@ -122,45 +122,62 @@ namespace DataStructures.Core.Graph
             if (IsEmpty())
                 return false;
 
-            return TypeOfGraph == GraphType.Directed ? IsCyclicDirectedRecursive() : IsCyclicUndirected();
+            return TypeOfGraph == GraphType.Directed ? IsCyclicDirected() : IsCyclicUndirected();
+        }
+
+        private enum ColorType
+        {
+            White,
+            Gray,
+            Black
+        }
+
+        private enum ProcessingStateType : byte
+        {
+            Enter,
+            Exit
         }
 
         private bool IsCyclicDirected()
         {
-            if (TypeOfGraph != GraphType.Undirected)
+            if (TypeOfGraph != GraphType.Directed)
                 throw new InvalidOperationException("The graph is undirected");
 
-            HashSet<Vertex<T>> visited = new HashSet<Vertex<T>>();
-            Stack<Vertex<T>> stack = new Stack<Vertex<T>>();
-            HashSet<Vertex<T>> onStack = new HashSet<Vertex<T>>();
             var rootVertices = GetRootVertices();
+            if (rootVertices.Count == 0)
+                return true;
 
             foreach (var vertex in rootVertices)
             {
-                if (visited.Contains(vertex))
-                    continue;
+                Dictionary<Vertex<T>, ColorType> states = new Dictionary<Vertex<T>, ColorType>();
+                Vertices.ForEach((v) => states.Add(v, ColorType.White));
 
-                stack.Push(vertex);
+                Stack<KeyValuePair<Vertex<T>, ProcessingStateType>> stack = new Stack<KeyValuePair<Vertex<T>, ProcessingStateType>>();
+                stack.Push(new KeyValuePair<Vertex<T>, ProcessingStateType>(vertex, ProcessingStateType.Enter));
 
                 while (stack.Count > 0)
                 {
                     var currentVertex = stack.Pop();
 
-                    if (!visited.Contains(currentVertex))
+                    if (currentVertex.Value == ProcessingStateType.Exit)
                     {
-                        visited.Add(currentVertex);
-                        onStack.Add(currentVertex);
+                        states[currentVertex.Key] = ColorType.Black;
+                    }
+                    else
+                    {
+                        states[currentVertex.Key] = ColorType.Gray;
+                        stack.Push(new KeyValuePair<Vertex<T>, ProcessingStateType>(currentVertex.Key, ProcessingStateType.Exit));
                     }
 
-                    foreach (var neighbour in currentVertex.Neighbours)
+                    foreach (var neighbour in currentVertex.Key.Neighbours)
                     {
-                        if (!visited.Contains(neighbour.Key))
-                        {
-                            stack.Push(neighbour.Key);
-                        }
-                        else if (onStack.Contains(neighbour.Key))
+                        if (states[neighbour.Key] == ColorType.Gray)
                         {
                             return true;
+                        }
+                        else if (states[neighbour.Key] == ColorType.White)
+                        {
+                            stack.Push(new KeyValuePair<Vertex<T>, ProcessingStateType>(neighbour.Key, ProcessingStateType.Enter));
                         }
                     }
                 }
