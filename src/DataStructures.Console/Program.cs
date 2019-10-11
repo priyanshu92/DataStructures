@@ -7,24 +7,29 @@ namespace DataStructures.Console
     {
         private static void Main(string[] args)
         {
-            Graph<int> g = new Graph<int>();
-            g.AddVertex(1);
-            g.AddVertex(2);
-            g.AddVertex(3);
-            g.AddVertex(4);
-            g.AddVertex(5);
-            g.AddVertex(6);
+            Graph<char> g = new Graph<char>();
+            g.AddVertex('A');
+            g.AddVertex('B');
+            g.AddVertex('C');
+            g.AddVertex('D');
+            g.AddVertex('E');
+            g.AddVertex('F');
 
-            g.AddUndirectedEdge(1, 3, 0);
-            g.AddUndirectedEdge(3, 5, 0);
-            g.AddUndirectedEdge(5, 6, 0);
-            g.AddUndirectedEdge(6, 4, 0);
-            g.AddUndirectedEdge(4, 2, 0);
-            g.AddUndirectedEdge(2, 1, 0);
-            g.AddUndirectedEdge(2, 5, 0);
-            g.AddUndirectedEdge(4, 5, 0);
+            g.AddUndirectedEdge('A', 'B', 0);
+            g.AddUndirectedEdge('B', 'D', 0);
+            g.AddUndirectedEdge('D', 'F', 0);
+            g.AddUndirectedEdge('F', 'E', 0);
+            g.AddUndirectedEdge('E', 'C', 0);
+            g.AddUndirectedEdge('C', 'A', 0);
+            g.AddUndirectedEdge('B', 'E', 0);
+            g.AddUndirectedEdge('D', 'E', 0);
 
-            g.TraverseFromVertex(1, (t) => WriteLine(t), GraphTraversalType.DepthFirstSearch);
+            WriteLine("Breadth First Search Traversal: ");
+            g.TraverseAllVertices((t) => Write($"{t} "), GraphTraversalType.BreadthFirstSearch);
+            WriteLine("\n\n");
+            WriteLine("Depth First Search Traversal: ");
+            g.TraverseAllVertices((t) => Write($"{t} "), GraphTraversalType.DepthFirstSearch);
+            WriteLine();
         }
     }
 }

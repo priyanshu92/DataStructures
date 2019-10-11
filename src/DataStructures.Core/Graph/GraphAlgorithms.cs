@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DataStructures.Core.Graph
 {
@@ -30,14 +31,23 @@ namespace DataStructures.Core.Graph
             if (!parents.ContainsKey(vertex))
                 parents.Add(vertex, null);
 
-            action(vertex.Value);
+            Stack<Vertex<T>> stack = new Stack<Vertex<T>>();
 
-            foreach (var neighbour in vertex.Neighbours)
+            stack.Push(vertex);
+
+            while (stack.Count > 0)
             {
-                if (!parents.ContainsKey(neighbour.Key))
+                var currentVertex = stack.Pop();
+
+                action(currentVertex.Value);
+
+                foreach (var neighbour in currentVertex.Neighbours.Reverse())
                 {
-                    parents.Add(neighbour.Key, vertex);
-                    DepthFirstSearchVisit(neighbour.Key, action, parents);
+                    if (!parents.ContainsKey(neighbour.Key))
+                    {
+                        parents.Add(neighbour.Key, currentVertex);
+                        stack.Push(neighbour.Key);
+                    }
                 }
             }
         }
@@ -78,7 +88,7 @@ namespace DataStructures.Core.Graph
                     if (!parents.ContainsKey(neighbour.Key))
                     {
                         queue.Enqueue(neighbour.Key);
-                        parents.Add(neighbour.Key, source);
+                        parents.Add(neighbour.Key, currentVertex);
                     }
                 }
             }
