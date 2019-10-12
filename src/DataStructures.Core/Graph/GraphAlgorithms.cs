@@ -324,5 +324,48 @@ namespace DataStructures.Core.Graph
 
             return false;
         }
+
+        public List<Vertex<T>> TopologicalSort()
+        {
+            Stack<Vertex<T>> sortedVertices = new Stack<Vertex<T>>();
+            List<Vertex<T>> topologicalOrder = new List<Vertex<T>>();
+
+            if (IsEmpty())
+                return topologicalOrder;
+
+            var rootVertices = GetRootVertices();
+            if (rootVertices.Count == 0)
+                return topologicalOrder;
+
+            HashSet<Vertex<T>> visitedVertices = new HashSet<Vertex<T>>();
+            foreach (var vertex in rootVertices)
+            {
+                if (visitedVertices.Contains(vertex))
+                    continue;
+
+                TopologicalSortHelper(vertex, visitedVertices, sortedVertices);
+            }
+
+            topologicalOrder.AddRange(sortedVertices);
+
+            return topologicalOrder;
+        }
+
+        private static void TopologicalSortHelper(Vertex<T> vertex, HashSet<Vertex<T>> visitedVertices, Stack<Vertex<T>> sortedVertices)
+        {
+            if (visitedVertices.Contains(vertex))
+                return;
+
+            visitedVertices.Add(vertex);
+
+            foreach (var neighbour in vertex.Neighbours)
+            {
+                if (visitedVertices.Contains(neighbour.Key))
+                    continue;
+                TopologicalSortHelper(neighbour.Key, visitedVertices, sortedVertices);
+            }
+
+            sortedVertices.Push(vertex);
+        }
     }
 }

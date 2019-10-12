@@ -7,29 +7,46 @@ namespace DataStructures.Console
     {
         private static void Main(string[] args)
         {
-            Graph<int> g = new Graph<int>();
-            g.AddVertex(0);
-            g.AddVertex(1);
-            g.AddVertex(2);
-            g.AddVertex(3);
-            g.AddVertex(4);
-            g.AddVertex(5);
-            g.AddVertex(6);
-            g.AddVertex(7);
+            Graph<char> g = new Graph<char>();
+            g.AddVertex('A');
+            g.AddVertex('B');
+            g.AddVertex('C');
+            g.AddVertex('D');
+            g.AddVertex('E');
+            g.AddVertex('F');
+            g.AddVertex('G');
+            g.AddVertex('H');
+            g.AddVertex('I');
+            g.AddVertex('J');
+            g.AddVertex('K');
+            g.AddVertex('L');
+            g.AddVertex('M');
 
-            g.AddDirectedEdge(1, 2, 0);
-            g.AddDirectedEdge(1, 3, 0);
-            g.AddDirectedEdge(4, 2, 0);
-            g.AddDirectedEdge(2, 5, 0);
-            g.AddDirectedEdge(3, 6, 0);
-            g.AddDirectedEdge(7, 4, 0);
-            g.AddDirectedEdge(5, 7, 0);
-            g.AddDirectedEdge(6, 7, 0);
+            g.AddDirectedEdge('C', 'A', 0);
+            g.AddDirectedEdge('C', 'B', 0);
+            g.AddDirectedEdge('A', 'D', 0);
+            g.AddDirectedEdge('B', 'D', 0);
+            g.AddDirectedEdge('E', 'A', 0);
+            g.AddDirectedEdge('E', 'D', 0);
+            g.AddDirectedEdge('E', 'F', 0);
+            g.AddDirectedEdge('D', 'H', 0);
+            g.AddDirectedEdge('D', 'G', 0);
+            g.AddDirectedEdge('G', 'I', 0);
+            g.AddDirectedEdge('H', 'I', 0);
+            g.AddDirectedEdge('H', 'J', 0);
+            g.AddDirectedEdge('I', 'L', 0);
+            g.AddDirectedEdge('J', 'L', 0);
+            g.AddDirectedEdge('J', 'M', 0);
+            g.AddDirectedEdge('K', 'J', 0);
+            g.AddDirectedEdge('K', 'J', 0);
+            g.AddDirectedEdge('F', 'K', 0);
+            g.AddDirectedEdge('F', 'J', 0);
 
-            if (g.IsCyclic())
-                WriteLine("Cyclic Graph");
-            else
-                WriteLine("Acyclic Graph");
+            var x = g.TopologicalSort();
+            foreach (var item in x)
+            {
+                WriteLine(item.Value);
+            }
 
             WriteLine();
         }
