@@ -330,12 +330,15 @@ namespace DataStructures.Core.Graph
             Stack<Vertex<T>> sortedVertices = new Stack<Vertex<T>>();
             List<Vertex<T>> topologicalOrder = new List<Vertex<T>>();
 
-            if (IsEmpty())
-                return topologicalOrder;
+            if (Vertices.Count == 0)
+                throw new InvalidOperationException(Messages.EmptyGraph);
+
+            if (TypeOfGraph != GraphType.Directed)
+                throw new InvalidOperationException(Messages.TopSortDirectedGraph);
 
             var rootVertices = GetRootVertices();
-            if (rootVertices.Count == 0)
-                return topologicalOrder;
+            if (rootVertices.Count == 0 || IsCyclic())
+                throw new InvalidOperationException(Messages.CyclicGraph);
 
             HashSet<Vertex<T>> visitedVertices = new HashSet<Vertex<T>>();
             foreach (var vertex in rootVertices)
@@ -347,6 +350,9 @@ namespace DataStructures.Core.Graph
             }
 
             topologicalOrder.AddRange(sortedVertices);
+
+            if (topologicalOrder.Count == 0)
+                throw new InvalidOperationException(Messages.CyclicGraph);
 
             return topologicalOrder;
         }
