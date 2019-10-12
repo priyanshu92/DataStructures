@@ -33,7 +33,7 @@ namespace DataStructures.Core.Graph
         /// <param name="vertex">The vertex to start traversing</param>
         /// <param name="action">The action to perform on each vertex</param>
         /// <param name="parents">The parents list</param>
-        private void DepthFirstSearchVisit(Vertex<T> vertex, Action<T> action, Dictionary<Vertex<T>, Vertex<T>> parents = null)
+        private static void DepthFirstSearchVisit(Vertex<T> vertex, Action<T> action, Dictionary<Vertex<T>, Vertex<T>> parents = null)
         {
             if (parents is null)
                 parents = new Dictionary<Vertex<T>, Vertex<T>>();
@@ -85,7 +85,7 @@ namespace DataStructures.Core.Graph
         /// <param name="vertex">The vertex to start traversing</param>
         /// <param name="action">The action to perform on each vertex</param>
         /// <param name="parents">The parents list</param>
-        private void BreadthFirstSearch(Vertex<T> source, Action<T> action, Dictionary<Vertex<T>, Vertex<T>> parents = null)
+        private static void BreadthFirstSearch(Vertex<T> source, Action<T> action, Dictionary<Vertex<T>, Vertex<T>> parents = null)
         {
             if (parents == null)
                 parents = new Dictionary<Vertex<T>, Vertex<T>>();
@@ -325,11 +325,12 @@ namespace DataStructures.Core.Graph
             return false;
         }
 
-        public List<Vertex<T>> TopologicalSort()
+        /// <summary>
+        /// Returns the list of vertices in Topological sorted order
+        /// </summary>
+        /// <returns>The list of vertices</returns>
+        public List<Vertex<T>> TopologicalSort(TopSortAlgorithmType algorithmType)
         {
-            Stack<Vertex<T>> sortedVertices = new Stack<Vertex<T>>();
-            List<Vertex<T>> topologicalOrder = new List<Vertex<T>>();
-
             if (Vertices.Count == 0)
                 throw new InvalidOperationException(Messages.EmptyGraph);
 
@@ -340,6 +341,15 @@ namespace DataStructures.Core.Graph
             if (rootVertices.Count == 0 || IsCyclic())
                 throw new InvalidOperationException(Messages.CyclicGraph);
 
+            return algorithmType == TopSortAlgorithmType.DFS
+                ? TopSortUsingDFS(rootVertices)
+                : TopSortUsingKahnsAlgorithm();
+        }
+
+        private List<Vertex<T>> TopSortUsingDFS(List<Vertex<T>> rootVertices)
+        {
+            Stack<Vertex<T>> sortedVertices = new Stack<Vertex<T>>();
+            List<Vertex<T>> topologicalOrder = new List<Vertex<T>>();
             HashSet<Vertex<T>> visitedVertices = new HashSet<Vertex<T>>();
             foreach (var vertex in rootVertices)
             {
@@ -372,6 +382,38 @@ namespace DataStructures.Core.Graph
             }
 
             sortedVertices.Push(vertex);
+        }
+
+        private List<Vertex<T>> TopSortUsingKahnsAlgorithm()
+        {
+            var degrees = GetVerticesWithInDegree();
+            int visitedNodes = 0;
+
+            Queue<Vertex<T>> vertices = new Queue<Vertex<T>>();
+
+            foreach (var degree in degrees)
+            {
+                if (degree.Value == 0)
+                    vertices.Enqueue(degree.Key);
+            }
+
+            List<Vertex<T>> topOrder = new List<Vertex<T>>();
+            while (vertices.Count > 0)
+            {
+                var currentVertex = vertices.Dequeue();
+                topOrder.Add(currentVertex);
+
+                foreach (var neighbour in currentVertex.Neighbours)
+                {
+                    if (--degrees[neighbour.Key] == 0)
+                        vertices.Enqueue(neighbour.Key);
+                }
+                visitedNodes++;
+            }
+            if (visitedNodes != Vertices.Count)
+                throw new InvalidOperationException(Messages.CyclicGraph);
+
+            return topOrder;
         }
     }
 }

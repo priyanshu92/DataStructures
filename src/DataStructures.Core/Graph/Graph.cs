@@ -208,28 +208,39 @@ namespace DataStructures.Core.Graph
         public List<Vertex<T>> GetRootVertices()
         {
             List<Vertex<T>> verticesWithDegreeZero = new List<Vertex<T>>();
-            Dictionary<Vertex<T>, int> degree = new Dictionary<Vertex<T>, int>();
-
-            if (Vertices.Count > 0)
-            {
-                Vertices.ForEach((vertex) => degree.Add(vertex, 0));
-
-                Vertices.ForEach((vertex) =>
-                {
-                    foreach (var neighbour in vertex.Neighbours)
-                    {
-                        degree[neighbour.Key]++;
-                    }
-                });
-            }
+            Dictionary<Vertex<T>, int> degree = GetVerticesWithInDegree();
 
             foreach (var vertex in degree)
             {
                 if (vertex.Value == 0)
                     verticesWithDegreeZero.Add(vertex.Key);
             }
-
             return verticesWithDegreeZero;
+        }
+
+        /// <summary>
+        /// Calculates the in-degree for each vertex in the graph
+        /// </summary>
+        /// <returns>A dictionary containing the vertex and it's in-degree</returns>
+        public Dictionary<Vertex<T>, int> GetVerticesWithInDegree()
+        {
+            Dictionary<Vertex<T>, int> degree = new Dictionary<Vertex<T>, int>();
+
+            if (Vertices.Count == 0)
+            {
+                return degree;
+            }
+
+            Vertices.ForEach((vertex) => degree.Add(vertex, 0));
+            Vertices.ForEach((vertex) =>
+            {
+                foreach (var neighbour in vertex.Neighbours)
+                {
+                    degree[neighbour.Key]++;
+                }
+            });
+
+            return degree;
         }
     }
 }

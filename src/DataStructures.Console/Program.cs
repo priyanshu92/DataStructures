@@ -16,44 +16,25 @@ namespace DataStructures.Console
             g.AddVertex('E');
             g.AddVertex('F');
             g.AddVertex('G');
-            //g.AddVertex('H');
-            //g.AddVertex('I');
-            //g.AddVertex('J');
-            //g.AddVertex('K');
-            //g.AddVertex('L');
-            //g.AddVertex('M');
-
-            //g.AddDirectedEdge('C', 'A', 0);
-            //g.AddDirectedEdge('C', 'B', 0);
-            //g.AddDirectedEdge('A', 'D', 0);
-            //g.AddDirectedEdge('B', 'D', 0);
-            //g.AddDirectedEdge('E', 'A', 0);
-            //g.AddDirectedEdge('E', 'D', 0);
-            //g.AddDirectedEdge('E', 'F', 0);
-            //g.AddDirectedEdge('D', 'H', 0);
-            //g.AddDirectedEdge('D', 'G', 0);
-            //g.AddDirectedEdge('G', 'I', 0);
-            //g.AddDirectedEdge('H', 'I', 0);
-            //g.AddDirectedEdge('H', 'J', 0);
-            //g.AddDirectedEdge('I', 'L', 0);
-            //g.AddDirectedEdge('J', 'L', 0);
-            //g.AddDirectedEdge('J', 'M', 0);
-            //g.AddDirectedEdge('K', 'J', 0);
-            //g.AddDirectedEdge('K', 'J', 0);
-            //g.AddDirectedEdge('F', 'K', 0);
-            //g.AddDirectedEdge('F', 'J', 0);
+            g.AddVertex('H');
 
             g.AddDirectedEdge('A', 'B', 0);
+            g.AddDirectedEdge('A', 'C', 0);
             g.AddDirectedEdge('B', 'C', 0);
+            g.AddDirectedEdge('B', 'E', 0);
             g.AddDirectedEdge('B', 'D', 0);
+            g.AddDirectedEdge('C', 'D', 0);
+            g.AddDirectedEdge('C', 'G', 0);
+            g.AddDirectedEdge('D', 'E', 0);
+            g.AddDirectedEdge('D', 'F', 0);
             g.AddDirectedEdge('D', 'G', 0);
-            g.AddDirectedEdge('E', 'F', 0);
-            g.AddDirectedEdge('F', 'D', 0);
-            g.AddDirectedEdge('G', 'F', 0);
+            g.AddDirectedEdge('E', 'H', 0);
+            g.AddDirectedEdge('F', 'H', 0);
+            g.AddDirectedEdge('G', 'H', 0);
 
             try
             {
-                var x = g.TopologicalSort();
+                var x = g.TopologicalSort(TopSortAlgorithmType.KahnsAlgorithm);
                 foreach (var item in x)
                 {
                     WriteLine(item.Value);

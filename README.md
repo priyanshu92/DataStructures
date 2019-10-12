@@ -27,3 +27,5 @@ Implements the following core data structures using C#:
   - Detecting cycle in a directed graph
   - Detecting cycle in an undirected graph
   - Topological Sorting
+    - DFS
+    - Kahn's Algorithm
