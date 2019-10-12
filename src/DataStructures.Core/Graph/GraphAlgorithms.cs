@@ -415,5 +415,58 @@ namespace DataStructures.Core.Graph
 
             return topOrder;
         }
+
+        public Dictionary<Vertex<T>, int> GetShortestPath(T fromVertexValue) => GetShortestPath(FindVertex(fromVertexValue));
+
+        public Dictionary<Vertex<T>, int> GetShortestPath(Vertex<T> sourceVertex)
+        {
+            if (TypeOfGraph == GraphType.Directed && !IsCyclic())
+            {
+                return GetShortestPathDAG(sourceVertex);
+            }
+
+            //TODO: Implement Dijkstra
+            return null;
+        }
+
+        private Dictionary<Vertex<T>, int> GetShortestPathDAG(Vertex<T> sourceVertex)
+        {
+            var topOrder = TopologicalSort(TopSortAlgorithmType.DFS);
+            int startingIndex = -1;
+            Dictionary<Vertex<T>, int> distance = new Dictionary<Vertex<T>, int>();
+
+            for (int i = 0; i < topOrder.Count; i++)
+            {
+                if (topOrder[i] == sourceVertex)
+                {
+                    startingIndex = i;
+                    break;
+                }
+            }
+
+            if (startingIndex == -1)
+                return distance;
+
+            distance[topOrder[startingIndex]] = 0;
+
+            for (int i = startingIndex; i < topOrder.Count; i++)
+            {
+                foreach (var neighbour in topOrder[i].Neighbours)
+                {
+                    int newDistance = distance[topOrder[i]] + neighbour.Value;
+                    if (distance.ContainsKey(neighbour.Key))
+                    {
+                        int currentDistance = distance[neighbour.Key];
+                        distance[neighbour.Key] = Math.Min(currentDistance, newDistance);
+                    }
+                    else
+                    {
+                        distance[neighbour.Key] = newDistance;
+                    }
+                }
+            }
+
+            return distance;
+        }
     }
 }
