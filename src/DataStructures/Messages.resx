@@ -124,6 +124,6 @@
     <value>The graph is empty</value>
   </data>
   <data name="TopSortDirectedGraph" xml:space="preserve">
-    <value>Topological sort can only work on directed graphs</value>
+    <value>Topological sort can only be used with Directed Acyclic Graph</value>
   </data>
 </root>

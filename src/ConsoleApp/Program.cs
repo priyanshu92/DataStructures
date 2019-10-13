@@ -2,7 +2,7 @@
 using System;
 using static System.Console;
 
-namespace DataStructures.Console
+namespace ConsoleApp
 {
     public class Program
     {

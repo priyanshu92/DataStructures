@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DataStructures.Core {
+namespace DataStructures {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace DataStructures.Core {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DataStructures.Core.Messages", typeof(Messages).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DataStructures.Messages", typeof(Messages).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -79,7 +79,7 @@ namespace DataStructures.Core {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Topological sort can only work on directed graphs.
+        ///   Looks up a localized string similar to Topological sort can only be used with Directed Acyclic Graph.
         /// </summary>
         internal static string TopSortDirectedGraph {
             get {
