@@ -1,5 +1,7 @@
-﻿using System;
+﻿using DataStructures.Graph;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DataStructures.Core.Graph
 {
@@ -76,7 +78,7 @@ namespace DataStructures.Core.Graph
             if (from is null || to is null)
                 return false;
 
-            if (from.Neighbours.ContainsKey(to))
+            if (from.Neighbours.Any(x => x.Vertex == to))
                 return false;
 
             if (IsEmpty())
@@ -85,7 +87,7 @@ namespace DataStructures.Core.Graph
             if (TypeOfGraph != GraphType.Directed)
                 throw new InvalidOperationException("Cannot add a directed edge in an undirected graph");
 
-            from.Neighbours.Add(to, cost);
+            from.Neighbours.Add(new Neighbour<T>(to, cost));
             return true;
         }
 
@@ -116,14 +118,14 @@ namespace DataStructures.Core.Graph
             if (TypeOfGraph != GraphType.Undirected)
                 throw new InvalidOperationException("Cannot add an undirected edge in a directed graph");
 
-            if (!firstVertex.Neighbours.ContainsKey(secondVertex))
+            if (!firstVertex.Neighbours.Any(x => x.Vertex == secondVertex))
             {
-                firstVertex.Neighbours.Add(secondVertex, cost);
+                firstVertex.Neighbours.Add(new Neighbour<T>(secondVertex, cost));
             }
 
-            if (!secondVertex.Neighbours.ContainsKey(firstVertex))
+            if (!secondVertex.Neighbours.Any(x => x.Vertex == firstVertex))
             {
-                secondVertex.Neighbours.Add(firstVertex, cost);
+                secondVertex.Neighbours.Add(new Neighbour<T>(firstVertex, cost));
             }
 
             return true;
@@ -236,7 +238,7 @@ namespace DataStructures.Core.Graph
             {
                 foreach (var neighbour in vertex.Neighbours)
                 {
-                    degree[neighbour.Key]++;
+                    degree[neighbour.Vertex]++;
                 }
             });
 

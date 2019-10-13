@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace DataStructures.Core.Graph
 {
@@ -50,12 +49,12 @@ namespace DataStructures.Core.Graph
 
                 action(currentVertex.Value);
 
-                foreach (var neighbour in currentVertex.Neighbours.Reverse())
+                foreach (var neighbour in currentVertex.Neighbours)
                 {
-                    if (!parents.ContainsKey(neighbour.Key))
+                    if (!parents.ContainsKey(neighbour.Vertex))
                     {
-                        parents.Add(neighbour.Key, currentVertex);
-                        stack.Push(neighbour.Key);
+                        parents.Add(neighbour.Vertex, currentVertex);
+                        stack.Push(neighbour.Vertex);
                     }
                 }
             }
@@ -104,10 +103,10 @@ namespace DataStructures.Core.Graph
 
                 foreach (var neighbour in currentVertex.Neighbours)
                 {
-                    if (!parents.ContainsKey(neighbour.Key))
+                    if (!parents.ContainsKey(neighbour.Vertex))
                     {
-                        queue.Enqueue(neighbour.Key);
-                        parents.Add(neighbour.Key, currentVertex);
+                        queue.Enqueue(neighbour.Vertex);
+                        parents.Add(neighbour.Vertex, currentVertex);
                     }
                 }
             }
@@ -172,11 +171,11 @@ namespace DataStructures.Core.Graph
 
                     foreach (var neighbour in currentVertex.Neighbours)
                     {
-                        if (!visited.Contains(neighbour.Key))
+                        if (!visited.Contains(neighbour.Vertex))
                         {
-                            stack.Push(neighbour.Key);
+                            stack.Push(neighbour.Vertex);
                         }
-                        else if (onStack.Contains(neighbour.Key))
+                        else if (onStack.Contains(neighbour.Vertex))
                         {
                             return true;
                         }
@@ -224,11 +223,11 @@ namespace DataStructures.Core.Graph
 
                     foreach (var neighbour in currentVertex.Neighbours)
                     {
-                        if (!visited.Contains(neighbour.Key))
+                        if (!visited.Contains(neighbour.Vertex))
                         {
-                            stack.Push(neighbour.Key);
+                            stack.Push(neighbour.Vertex);
                         }
-                        else if (onStack.Contains(neighbour.Key))
+                        else if (onStack.Contains(neighbour.Vertex))
                         {
                             return true;
                         }
@@ -273,9 +272,9 @@ namespace DataStructures.Core.Graph
 
                 foreach (var neighbour in vertex.Neighbours)
                 {
-                    if (!visited.Contains(neighbour.Key) && IsCyclicHelper(neighbour.Key, visited, onStack))
+                    if (!visited.Contains(neighbour.Vertex) && IsCyclicHelper(neighbour.Vertex, visited, onStack))
                         return true;
-                    else if (onStack.Contains(neighbour.Key))
+                    else if (onStack.Contains(neighbour.Vertex))
                         return true;
                 }
             }
@@ -307,14 +306,14 @@ namespace DataStructures.Core.Graph
                 {
                     var currentVertex = stack.Pop();
 
-                    foreach (var neighbour in currentVertex.Neighbours.Reverse())
+                    foreach (var neighbour in currentVertex.Neighbours)
                     {
-                        if (!parents.ContainsKey(neighbour.Key))
+                        if (!parents.ContainsKey(neighbour.Vertex))
                         {
-                            parents.Add(neighbour.Key, currentVertex);
-                            stack.Push(neighbour.Key);
+                            parents.Add(neighbour.Vertex, currentVertex);
+                            stack.Push(neighbour.Vertex);
                         }
-                        else if (parents[currentVertex] != neighbour.Key)
+                        else if (parents[currentVertex] != neighbour.Vertex)
                         {
                             return true;
                         }
@@ -376,9 +375,9 @@ namespace DataStructures.Core.Graph
 
             foreach (var neighbour in vertex.Neighbours)
             {
-                if (visitedVertices.Contains(neighbour.Key))
+                if (visitedVertices.Contains(neighbour.Vertex))
                     continue;
-                TopologicalSortHelper(neighbour.Key, visitedVertices, sortedVertices);
+                TopologicalSortHelper(neighbour.Vertex, visitedVertices, sortedVertices);
             }
 
             sortedVertices.Push(vertex);
@@ -405,8 +404,8 @@ namespace DataStructures.Core.Graph
 
                 foreach (var neighbour in currentVertex.Neighbours)
                 {
-                    if (--degrees[neighbour.Key] == 0)
-                        vertices.Enqueue(neighbour.Key);
+                    if (--degrees[neighbour.Vertex] == 0)
+                        vertices.Enqueue(neighbour.Vertex);
                 }
                 visitedNodes++;
             }
@@ -453,15 +452,15 @@ namespace DataStructures.Core.Graph
             {
                 foreach (var neighbour in topOrder[i].Neighbours)
                 {
-                    int newDistance = distance[topOrder[i]] + neighbour.Value;
-                    if (distance.ContainsKey(neighbour.Key))
+                    int newDistance = distance[topOrder[i]] + neighbour.Cost;
+                    if (distance.ContainsKey(neighbour.Vertex))
                     {
-                        int currentDistance = distance[neighbour.Key];
-                        distance[neighbour.Key] = Math.Min(currentDistance, newDistance);
+                        int currentDistance = distance[neighbour.Vertex];
+                        distance[neighbour.Vertex] = Math.Min(currentDistance, newDistance);
                     }
                     else
                     {
-                        distance[neighbour.Key] = newDistance;
+                        distance[neighbour.Vertex] = newDistance;
                     }
                 }
             }

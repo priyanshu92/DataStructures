@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataStructures.Graph;
+using System;
 using System.Collections.Generic;
 
 namespace DataStructures.Core.Graph
@@ -12,10 +13,10 @@ namespace DataStructures.Core.Graph
         public Vertex(T value)
         {
             Value = value;
-            Neighbours = new Dictionary<Vertex<T>, int>();
+            Neighbours = new List<Neighbour<T>>();
         }
 
-        public Vertex(T value, Dictionary<Vertex<T>, int> neighbours)
+        public Vertex(T value, List<Neighbour<T>> neighbours)
         {
             Value = value;
             Neighbours = neighbours;
@@ -29,7 +30,7 @@ namespace DataStructures.Core.Graph
         /// <summary>
         /// The list of neighbours along with the cost associated with each neighbour
         /// </summary>
-        public Dictionary<Vertex<T>, int> Neighbours { get; }
+        public List<Neighbour<T>> Neighbours { get; }
 
         public int CompareTo(T other)
         {
