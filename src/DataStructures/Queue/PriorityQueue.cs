@@ -5,12 +5,12 @@ using System.Collections.Generic;
 namespace DataStructures.Core.Queue
 {
     public class PriorityQueue<T> : IEnumerable<T>
-        where T: IComparable<T>
+        where T : IComparable<T>
     {
         /// <summary>
         /// The queued items stored in the form of a linked list in priority order.
         /// </summary>
-        private LinkedList<T> _queue = new LinkedList<T>();
+        private readonly LinkedList<T> _queue = new LinkedList<T>();
 
         /// <summary>
         /// Inserts the item according to the priority.
@@ -18,7 +18,7 @@ namespace DataStructures.Core.Queue
         /// <param name="item">Item to be inserted.</param>
         public void Enqueue(T item)
         {
-            if(_queue.Count == 0)
+            if (_queue.Count == 0)
             {
                 _queue.AddLast(item);
             }
@@ -26,7 +26,7 @@ namespace DataStructures.Core.Queue
             {
                 var current = _queue.First;
 
-                while (current != null && current.Value.CompareTo(item)>0)
+                while (current != null && current.Value.CompareTo(item) > 0)
                 {
                     current = current.Next;
                 }

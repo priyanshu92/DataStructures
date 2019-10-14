@@ -386,7 +386,6 @@ namespace DataStructures.Core.Graph
         private List<Vertex<T>> TopSortUsingKahnsAlgorithm()
         {
             var degrees = GetVerticesWithInDegree();
-            int visitedNodes = 0;
 
             Queue<Vertex<T>> vertices = new Queue<Vertex<T>>();
 
@@ -397,6 +396,7 @@ namespace DataStructures.Core.Graph
             }
 
             List<Vertex<T>> topOrder = new List<Vertex<T>>();
+            int visitedNodes = 0;
             while (vertices.Count > 0)
             {
                 var currentVertex = vertices.Dequeue();
@@ -419,6 +419,9 @@ namespace DataStructures.Core.Graph
 
         public Dictionary<Vertex<T>, int> GetShortestPath(Vertex<T> sourceVertex)
         {
+            if (IsEmpty())
+                throw new InvalidOperationException(Messages.EmptyGraph);
+
             if (TypeOfGraph == GraphType.Directed && !IsCyclic())
             {
                 return GetShortestPathDAG(sourceVertex);
