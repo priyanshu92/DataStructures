@@ -40,7 +40,7 @@ namespace DataStructures.Core.Graph
         public void AddVertex(Vertex<T> vertex)
         {
             if (vertex is null)
-                return;
+                throw new ArgumentNullException(nameof(vertex));
 
             Vertices.Add(vertex);
         }
@@ -49,9 +49,11 @@ namespace DataStructures.Core.Graph
         /// Adds a new vertex to the graph
         /// </summary>
         /// <param name="value">The value of the vertex to be added</param>
-        public void AddVertex(T value)
+        public Vertex<T> AddVertex(T value)
         {
-            Vertices.Add(new Vertex<T>(value));
+            var v = new Vertex<T>(value);
+            Vertices.Add(v);
+            return v;
         }
 
         /// <summary>
@@ -138,7 +140,17 @@ namespace DataStructures.Core.Graph
         /// <param name="secondVertexValue">The second vertex value</param>
         /// <param name="cost">The cost of the edge</param>
         /// <returns><see langword="true"/>if the edge is added <see langword="false"/> otherwise</returns>
-        public bool AddUndirectedEdge(T firstVertexValue, T secondVertexValue, int cost) => AddUndirectedEdge(FindVertex(firstVertexValue), FindVertex(secondVertexValue), cost);
+        public bool AddUndirectedEdge(T firstVertexValue, T secondVertexValue, int cost)
+        {
+            var firstVertex = FindVertex(firstVertexValue);
+            if (firstVertex is null)
+                firstVertex = AddVertex(firstVertexValue);
+            var secondVertex = FindVertex(secondVertexValue);
+            if (secondVertex is null)
+                secondVertex = AddVertex(secondVertexValue);
+
+            return AddUndirectedEdge(firstVertex, secondVertex, cost);
+        }
 
         /// <summary>
         /// Traverses all the vertices of the graph

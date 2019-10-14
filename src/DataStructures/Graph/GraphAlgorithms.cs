@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataStructures.Graph;
+using System;
 using System.Collections.Generic;
 
 namespace DataStructures.Core.Graph
@@ -415,27 +416,125 @@ namespace DataStructures.Core.Graph
             return topOrder;
         }
 
-        public Dictionary<Vertex<T>, int> GetShortestPath(T fromVertexValue) => GetShortestPath(FindVertex(fromVertexValue));
+        public Dictionary<Vertex<T>, int> GetShortestDistance(T fromVertexValue) => GetShortestDistance(FindVertex(fromVertexValue));
 
-        public Dictionary<Vertex<T>, int> GetShortestPath(Vertex<T> sourceVertex)
+        public List<Vertex<T>> GetShortestPath(T fromVertexValue, T toVertexValue) => GetShortestPath(FindVertex(fromVertexValue), FindVertex(toVertexValue));
+
+        private List<Vertex<T>> GetShortestPath(Vertex<T> sourceVertex, Vertex<T> destinationVertex)
         {
             if (IsEmpty())
                 throw new InvalidOperationException(Messages.EmptyGraph);
 
+            if (destinationVertex is null)
+                throw new InvalidOperationException("Destination vertex not found");
+
+            List<Vertex<T>> path = new List<Vertex<T>>();
+            Dictionary<Vertex<T>, DistanceInfo<T>> distanceInfo = null;
+
             if (TypeOfGraph == GraphType.Directed && !IsCyclic())
             {
-                return GetShortestPathDAG(sourceVertex);
+                distanceInfo = GetShortestDistanceDAG(sourceVertex);
+            }
+            else
+            {
+                distanceInfo = GetShortestDistanceDijkstra(sourceVertex);
             }
 
-            //TODO: Implement Dijkstra
-            return null;
+            var vertex = destinationVertex;
+            while (vertex != null)
+            {
+                path.Add(vertex);
+                vertex = distanceInfo[vertex].PreviousVertex;
+            }
+            path.Reverse();
+            return path;
         }
 
-        private Dictionary<Vertex<T>, int> GetShortestPathDAG(Vertex<T> sourceVertex)
+        public Dictionary<Vertex<T>, int> GetShortestDistance(Vertex<T> sourceVertex)
+        {
+            if (IsEmpty())
+                throw new InvalidOperationException(Messages.EmptyGraph);
+
+            Dictionary<Vertex<T>, int> distances = new Dictionary<Vertex<T>, int>();
+            Dictionary<Vertex<T>, DistanceInfo<T>> distanceInfo = null;
+
+            if (TypeOfGraph == GraphType.Directed && !IsCyclic())
+            {
+                distanceInfo = GetShortestDistanceDAG(sourceVertex);
+            }
+            else
+            {
+                distanceInfo = GetShortestDistanceDijkstra(sourceVertex);
+            }
+
+            foreach (var item in distanceInfo)
+            {
+                distances.Add(item.Key, item.Value.Distance);
+            }
+
+            return distances;
+        }
+
+        private Dictionary<Vertex<T>, DistanceInfo<T>> GetShortestDistanceDijkstra(Vertex<T> sourceVertex)
+        {
+            Dictionary<Vertex<T>, DistanceInfo<T>> distances = new Dictionary<Vertex<T>, DistanceInfo<T>>();
+            List<Vertex<T>> verticesInShortestPath = new List<Vertex<T>>();
+
+            foreach (var vertex in Vertices)
+            {
+                distances.Add(vertex, new DistanceInfo<T>(int.MaxValue, null));
+            }
+
+            distances[sourceVertex].Distance = 0;
+
+            foreach (var vertex in Vertices)
+            {
+                Vertex<T> vertexWithMininumDistance = GetVertexWithMinDistance(distances, verticesInShortestPath);
+                verticesInShortestPath.Add(vertexWithMininumDistance);
+
+                foreach (var neighbour in vertexWithMininumDistance.Neighbours)
+                {
+                    if (verticesInShortestPath.Contains(neighbour.Vertex))
+                        continue;
+
+                    int currentDistance = distances[neighbour.Vertex].Distance;
+                    int newDistance = distances[vertexWithMininumDistance].Distance + neighbour.Cost;
+
+                    if (newDistance < currentDistance)
+                    {
+                        distances[neighbour.Vertex].Distance = newDistance;
+                        distances[neighbour.Vertex].PreviousVertex = vertexWithMininumDistance;
+                    }
+                }
+            }
+
+            return distances;
+        }
+
+        private Vertex<T> GetVertexWithMinDistance(Dictionary<Vertex<T>, DistanceInfo<T>> distances, List<Vertex<T>> verticesInShortestPath)
+        {
+            int minValue = int.MaxValue;
+            Vertex<T> result = new Vertex<T>(default);
+
+            foreach (var item in distances)
+            {
+                if (verticesInShortestPath.Contains(item.Key))
+                    continue;
+
+                if (item.Value.Distance < minValue)
+                {
+                    minValue = item.Value.Distance;
+                    result = item.Key;
+                }
+            }
+            return result;
+        }
+
+        private Dictionary<Vertex<T>, DistanceInfo<T>> GetShortestDistanceDAG(Vertex<T> sourceVertex)
         {
             var topOrder = TopologicalSort(TopSortAlgorithmType.DFS);
             int startingIndex = -1;
-            Dictionary<Vertex<T>, int> distance = new Dictionary<Vertex<T>, int>();
+            Dictionary<Vertex<T>, DistanceInfo<T>> distance = new Dictionary<Vertex<T>, DistanceInfo<T>>();
 
             for (int i = 0; i < topOrder.Count; i++)
             {
@@ -449,21 +548,21 @@ namespace DataStructures.Core.Graph
             if (startingIndex == -1)
                 return distance;
 
-            distance[topOrder[startingIndex]] = 0;
+            for (int i = startingIndex; i < topOrder.Count; i++)
+                distance.Add(topOrder[i], new DistanceInfo<T>(int.MaxValue, null));
+
+            distance[topOrder[startingIndex]].Distance = 0;
 
             for (int i = startingIndex; i < topOrder.Count; i++)
             {
                 foreach (var neighbour in topOrder[i].Neighbours)
                 {
-                    int newDistance = distance[topOrder[i]] + neighbour.Cost;
-                    if (distance.ContainsKey(neighbour.Vertex))
+                    int newDistance = distance[topOrder[i]].Distance + neighbour.Cost;
+                    int currentDistance = distance[neighbour.Vertex].Distance;
+                    if (newDistance < currentDistance)
                     {
-                        int currentDistance = distance[neighbour.Vertex];
-                        distance[neighbour.Vertex] = Math.Min(currentDistance, newDistance);
-                    }
-                    else
-                    {
-                        distance[neighbour.Vertex] = newDistance;
+                        distance[neighbour.Vertex].Distance = newDistance;
+                        distance[neighbour.Vertex].PreviousVertex = topOrder[i];
                     }
                 }
             }

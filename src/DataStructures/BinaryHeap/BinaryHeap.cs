@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DataStructures.Core.BinaryHeap
 {
-    public class BinaryHeap<T> where T : IComparable<T>
+    public class BinaryHeap<T>
     {
         private readonly IComparer<T> _comparer;
         private readonly BinaryHeapType _heapType;
@@ -34,6 +34,17 @@ namespace DataStructures.Core.BinaryHeap
                 if (_count == 0)
                     return default;
                 return _heapType == BinaryHeapType.MinHeap ? _items[0] : default;
+            }
+        }
+
+        /// <summary>
+        /// Returns the number of items in the binary heap
+        /// </summary>
+        public int Count
+        {
+            get
+            {
+                return _count;
             }
         }
 
