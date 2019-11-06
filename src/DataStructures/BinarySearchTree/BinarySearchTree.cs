@@ -372,38 +372,19 @@ namespace DataStructures.Core.BinarySearchTree
             if (Root != null)
             {
                 Stack<BinaryTreeNode<T>> stack = new Stack<BinaryTreeNode<T>>();
-
                 var current = Root;
-
-                bool goLeftNext = true;
-
-                while (current != null)
+                while (current != null || stack.Count > 0)
                 {
-                    if (goLeftNext)
+                    while (current != null)
                     {
-                        while (current.Left != null)
-                        {
-                            stack.Push(current);
-                            current = current.Left;
-                        }
+                        stack.Push(current);
+                        current = current.Left;
                     }
 
+                    current = stack.Pop();
                     yield return current.Value;
 
-                    if (current.Right != null)
-                    {
-                        current = current.Right;
-
-                        goLeftNext = true;
-                    }
-                    else
-                    {
-                        if (stack.Count == 0)
-                            current = null;
-                        else
-                            current = stack.Pop();
-                        goLeftNext = false;
-                    }
+                    current = current.Right;
                 }
             }
         }
@@ -550,38 +531,20 @@ namespace DataStructures.Core.BinarySearchTree
             if (Count == 0)
                 return;
 
-            var current = Root;
-
             Stack<BinaryTreeNode<T>> stack = new Stack<BinaryTreeNode<T>>();
-            bool goLeftNext = true;
-
-            while (current != null)
+            var current = Root;
+            while (current != null || stack.Count > 0)
             {
-                if (goLeftNext)
+                while (current != null)
                 {
-                    while (current.Left != null)
-                    {
-                        stack.Push(current);
-                        current = current.Left;
-                    }
+                    stack.Push(current);
+                    current = current.Left;
                 }
 
+                current = stack.Pop();
                 action(current.Value);
 
-                if (current.Right != null)
-                {
-                    current = current.Right;
-
-                    goLeftNext = true;
-                }
-                else
-                {
-                    if (stack.Count == 0)
-                        current = null;
-                    else
-                        current = stack.Pop();
-                    goLeftNext = false;
-                }
+                current = current.Right;
             }
         }
 
