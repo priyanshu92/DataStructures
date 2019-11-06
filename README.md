@@ -29,3 +29,4 @@ Implements the following core data structures using C#:
   - Topological Sorting
     - DFS
     - Kahn's Algorithm
+  - Dijkstra's Algorithm

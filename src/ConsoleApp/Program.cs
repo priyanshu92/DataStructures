@@ -1,5 +1,6 @@
 ﻿using DataStructures.Core.Graph;
 using System;
+using System.Linq;
 using static System.Console;
 
 namespace ConsoleApp
@@ -9,36 +10,20 @@ namespace ConsoleApp
         private static void Main(string[] args)
         {
             Graph<char> g = new Graph<char>();
-            g.AddVertex('A');
-            g.AddVertex('B');
-            g.AddVertex('C');
-            g.AddVertex('D');
-            g.AddVertex('E');
-            g.AddVertex('F');
-            g.AddVertex('G');
-            g.AddVertex('H');
 
-            g.AddDirectedEdge('A', 'B', 3);
-            g.AddDirectedEdge('A', 'C', 6);
-            g.AddDirectedEdge('B', 'C', 4);
-            g.AddDirectedEdge('B', 'E', 11);
-            g.AddDirectedEdge('B', 'D', 4);
-            g.AddDirectedEdge('C', 'D', 8);
-            g.AddDirectedEdge('C', 'G', 11);
-            g.AddDirectedEdge('D', 'E', -4);
-            g.AddDirectedEdge('D', 'F', 5);
-            g.AddDirectedEdge('D', 'G', 2);
-            g.AddDirectedEdge('E', 'H', 9);
-            g.AddDirectedEdge('F', 'H', 1);
-            g.AddDirectedEdge('G', 'H', 2);
+            g.AddUndirectedEdge('A', 'B', 10);
+            g.AddUndirectedEdge('B', 'D', 2);
+            g.AddUndirectedEdge('D', 'E', 7);
+            g.AddUndirectedEdge('C', 'E', 2);
+            g.AddUndirectedEdge('A', 'C', 3);
+            g.AddUndirectedEdge('B', 'C', 1);
+            g.AddUndirectedEdge('B', 'C', 1);
+            g.AddUndirectedEdge('C', 'D', 8);
 
             try
             {
-                var x = g.GetShortestPath('A');
-                foreach (var item in x)
-                {
-                    WriteLine($"{item.Key.Value} -> {item.Value}");
-                }
+                var x = g.GetShortestPath('A', 'E');
+                WriteLine(string.Join(" -> ", x.Select(y => y.Value)));
             }
             catch (InvalidOperationException ex)
             {
