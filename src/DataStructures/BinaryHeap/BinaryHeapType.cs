@@ -1,4 +1,4 @@
-﻿namespace DataStructures.Core.BinaryHeap
+﻿namespace DataStructures.BinaryHeap
 {
     public enum BinaryHeapType : byte
     {

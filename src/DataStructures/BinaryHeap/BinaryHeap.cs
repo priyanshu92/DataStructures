@@ -1,40 +1,25 @@
-﻿using System;
+﻿using DataStructures.BinaryHeap;
+using System;
 using System.Collections.Generic;
 
-namespace DataStructures.Core.BinaryHeap
+namespace DataStructures.BinaryHeap
 {
-    public class BinaryHeap<T>
+    public abstract class BinaryHeap<T>
     {
-        private readonly IComparer<T> _comparer;
-        private readonly BinaryHeapType _heapType;
-        private T[] _items;
-        private const int INITIAL_HEAP_SIZE = 2;
-        private int _count;
+        protected readonly IComparer<T> _comparer;
+        protected T[] _items;
+        protected const int INITIAL_HEAP_SIZE = 2;
+        protected int _count;
 
         /// <summary>
-        /// The largest element in the heap. (Only if heap type is <see cref="BinaryHeapType.MaxHeap"/>. It returns -1 if heap type is <see cref="BinaryHeapType.MinHeap"/>
-        /// </summary
-        public T Max
-        {
-            get
-            {
-                if (_count == 0)
-                    return default;
-                return _heapType == BinaryHeapType.MaxHeap ? _items[0] : default;
-            }
-        }
-
-        /// <summary>
-        /// The smallest element in the heap. (Only if heap type is <see cref="BinaryHeapType.MinHeap"/>. It returns -1 if heap type is <see cref="BinaryHeapType.MaxHeap"/>
+        /// Returns the top element in the heap
         /// </summary>
-        public T Min
+        /// <returns></returns>
+        public T Peek()
         {
-            get
-            {
-                if (_count == 0)
-                    return default;
-                return _heapType == BinaryHeapType.MinHeap ? _items[0] : default;
-            }
+            if (_count == 0)
+                return default;
+            return _items[0];
         }
 
         /// <summary>
@@ -52,9 +37,8 @@ namespace DataStructures.Core.BinaryHeap
         /// Creates a new <see cref="BinaryHeap"/> based on the given <see cref="BinaryHeapType"/>
         /// </summary>
         /// <param name="heapType">The type of heap to be created</param>
-        public BinaryHeap(BinaryHeapType heapType)
+        public BinaryHeap()
         {
-            _heapType = heapType;
             _items = new T[INITIAL_HEAP_SIZE];
             _count = 0;
             _comparer = Comparer<T>.Default;
@@ -64,8 +48,8 @@ namespace DataStructures.Core.BinaryHeap
         /// Creates a new <see cref="BinaryHeap"/> based on the given <see cref="BinaryHeapType"/> and <see cref="IComparer{T}"/>
         /// </summary>
         /// <param name="comparer">The comparer to use</param>
-        public BinaryHeap(BinaryHeapType heapType, IComparer<T> comparer)
-            : this(heapType)
+        public BinaryHeap(IComparer<T> comparer)
+            : this()
         {
             _comparer = comparer;
         }
@@ -75,7 +59,7 @@ namespace DataStructures.Core.BinaryHeap
         /// </summary>
         /// <param name="index">The child index for which we are getting the parent</param>
         /// <returns>The index of the parent if exists otherwise -1 (for root node)</returns>
-        private int GetParentIndex(int index)
+        protected int GetParentIndex(int index)
         {
             if (index <= 0 || index >= _items.Length)
                 return -1;
@@ -88,7 +72,7 @@ namespace DataStructures.Core.BinaryHeap
         /// </summary>
         /// <param name="index">The parent index for which we are getting the child index</param>
         /// <returns>The index of the left child if exists otherwise returns -1</returns>
-        private int GetLeftChildIndex(int index)
+        protected int GetLeftChildIndex(int index)
         {
             int leftChildIndex = 2 * index + 1;
             if (leftChildIndex >= _count)
@@ -101,7 +85,7 @@ namespace DataStructures.Core.BinaryHeap
         /// </summary>
         /// <param name="index">The parent index for which we are getting the child index</param>
         /// <returns>The index of the right child if exists otherwise returns -1</returns>
-        private int GetRightChildIndex(int index)
+        protected int GetRightChildIndex(int index)
         {
             int rightChildIndex = 2 * index + 2;
             if (rightChildIndex >= _count)
@@ -113,37 +97,9 @@ namespace DataStructures.Core.BinaryHeap
         /// Recursively reorganizes the heap nodes to satisfy heap order property
         /// </summary>
         /// <param name="i">The index of the element to start from</param>
-        private void PercolateDown(int i)
-        {
-            int leftChildIndex = GetLeftChildIndex(i);
-            int rightChildIndex = GetRightChildIndex(i);
-            int heapElementIndex = i;
+        protected abstract void PercolateDown(int i);
 
-            if (_heapType == BinaryHeapType.MaxHeap)
-            {
-                if (leftChildIndex != -1 && _comparer.Compare(_items[leftChildIndex], _items[i]) > 0)
-                    heapElementIndex = leftChildIndex;
-
-                if (rightChildIndex != -1 && _comparer.Compare(_items[rightChildIndex], _items[heapElementIndex]) >= 0)
-                    heapElementIndex = rightChildIndex;
-            }
-            else if (_heapType == BinaryHeapType.MinHeap)
-            {
-                if (leftChildIndex != -1 && _comparer.Compare(_items[leftChildIndex], _items[i]) < 0)
-                    heapElementIndex = leftChildIndex;
-
-                if (rightChildIndex != -1 && _comparer.Compare(_items[rightChildIndex], _items[heapElementIndex]) <= 0)
-                    heapElementIndex = rightChildIndex;
-            }
-
-            if (heapElementIndex != i)
-            {
-                T temp = _items[heapElementIndex];
-                _items[heapElementIndex] = _items[i];
-                _items[i] = temp;
-                PercolateDown(heapElementIndex);
-            }
-        }
+        protected abstract void PercolateUp(int i);
 
         /// <summary>
         /// Deletes the top element from the heap. (Smallest element for MinHeap and largest for a MaxHeap)
@@ -174,13 +130,8 @@ namespace DataStructures.Core.BinaryHeap
                 ResizeHeap();
 
             _count++;
-            int i = _count - 1;
-            while (i >= 0 && GetParentIndex(i) != -1 && ((_heapType == BinaryHeapType.MaxHeap && _comparer.Compare(data, _items[GetParentIndex(i)]) > 0) || (_heapType == BinaryHeapType.MinHeap && _comparer.Compare(data, _items[GetParentIndex(i)]) < 0)))
-            {
-                _items[i] = _items[GetParentIndex(i)];
-                i = GetParentIndex(i);
-            }
-            _items[i] = data;
+            _items[_count - 1] = data;
+            PercolateUp(_count - 1);
         }
 
         /// <summary>
@@ -204,7 +155,11 @@ namespace DataStructures.Core.BinaryHeap
             if (inputArray is null || inputArray.Length == 0)
                 return null;
 
-            BinaryHeap<T> heap = new BinaryHeap<T>(binaryHeapType);
+            BinaryHeap<T> heap;
+            if (binaryHeapType == BinaryHeapType.MinHeap)
+                heap = new MinHeap<T>();
+            else
+                heap = new MaxHeap<T>();
             while (inputArray.Length > heap._items.Length)
                 heap.ResizeHeap();
 
@@ -238,7 +193,7 @@ namespace DataStructures.Core.BinaryHeap
             }
         }
 
-        private static void Swap(ref T item1, ref T item2)
+        protected static void Swap(ref T item1, ref T item2)
         {
             T temp = item1;
             item1 = item2;
